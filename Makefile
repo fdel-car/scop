@@ -6,22 +6,17 @@
 #    By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/01/25 18:47:49 by fdel-car          #+#    #+#              #
-#    Updated: 2017/11/07 15:38:24 by fdel-car         ###   ########.fr        #
+#    Updated: 2017/11/07 17:59:07 by fdel-car         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = scop
 
-SRCS = src/main.c
-		# src/load_texture.c src/matrice.c src/vector.c \
-		src/vector_bis.c src/init.c src/callback.c src/obj_parser.c \
-		src/handle_mtl.c
+SRCS = src/main.c src/load_obj.c src/init_gl.c
 
-OBJS = main.o
-		# load_texture.o matrice.o vector.o vector_bis.o init.o callback.o \
-		obj_parser.o handle_mtl.o
+OBJS = main.o load_obj.o init_gl.o
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = # -Wall -Wextra -Werror
 
 all: $(NAME)
 

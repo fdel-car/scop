@@ -6,52 +6,109 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/07 15:36:41 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/07 20:22:49 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <GL/glew.h> // include GLEW and new version of GL on Windows
-#include <GLFW/glfw3.h> // GLFW helper library
-#include <stdio.h>
+#include "scop.h"
 
-int main() {
-  // start GL context and O/S window using the GLFW helper library
-  if (!glfwInit()) {
-    fprintf(stderr, "ERROR: could not start GLFW3\n");
-    return 1;
-  }
+int main(int ac, char **av) {
+	GLfloat	shader_program;
+	t_obj	*obj;
 
-  // uncomment these lines if on Apple OS X
-  /*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);*/
+	// Start GL context and O/S window using the GLFW helper library
+	if (!glfwInit()) {
+		fprintf(stderr, "ERROR: Could not start GLFW3\n");
+		return (-1);
+	}
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
-  GLFWwindow* window = glfwCreateWindow(640, 480, "Hello Triangle", NULL, NULL);
-  if (!window) {
-    fprintf(stderr, "ERROR: could not open window with GLFW3\n");
-    glfwTerminate();
-    return 1;
-  }
-  glfwMakeContextCurrent(window);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "scop_2.0", NULL, NULL);
+	if (!window) {
+		fprintf(stderr, "ERROR: Could not open window with GLFW3\n");
+		glfwTerminate();
+		return (-1);
+	}
+	glfwMakeContextCurrent(window);
 
-  // start GLEW extension handler
-  glewExperimental = GL_TRUE;
-  glewInit();
+	// Start GLEW extension handler
+	glewExperimental = GL_TRUE;
+	glewInit();
 
-  // get version info
-  const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
-  const GLubyte* version = glGetString(GL_VERSION); // version as a string
-  printf("Renderer: %s\n", renderer);
-  printf("OpenGL version supported %s\n", version);
+	// Get version info
+	// const GLubyte* renderer = glGetString(GL_RENDERER);
+	// const GLubyte* version = glGetString(GL_VERSION);
+	// printf("Renderer: %s\n", renderer);
+	// printf("OpenGL version supported %s\n", version);
 
-  // tell GL to only draw onto a pixel if the shape is closer to the viewer
-  glEnable(GL_DEPTH_TEST); // enable depth-testing
-  glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
+	// Tell GL to only draw onto a pixel if the shape is closer to the viewer
+	glEnable(GL_DEPTH_TEST); // Enable depth-testing
+	shader_program = init_shaders();
 
-  /* OTHER STUFF GOES HERE NEXT */
+	/* OTHER STUFF GOES HERE NEXT */
+	if (ac != 2) {
+		fprintf(stderr, "ERROR: Obj missing in command line\n");
+		glfwTerminate();
+		return (-1);
+	}
+	obj = load_obj(av[1]);
+	if (obj == NULL) {
+		fprintf(stderr, "ERROR: Obj not parsed correctly, try to import and export it with Blender\n");
+		glfwTerminate();
+		return (-1);
+	}
 
-  // close GL context and any other GLFW resources
-  glfwTerminate();
-  return 0;
+	GLuint vbo_obj, vao_obj;
+	glGenVertexArrays(1, &vao_obj);
+    glGenBuffers(1, &vbo_obj);
+    glBindVertexArray(vao_obj);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_obj);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(obj->data), obj->data, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	int i = 0;
+	// Print vertices
+	// while (i < obj->nb_vertices) {
+	// 	printf("%f", obj->vertices[i]);
+	// 	if (i % 3 == 2) {
+	// 		printf("\n");
+	// 	} else {
+	// 		printf(" | ");;
+	// 	}
+	// 	i++;
+	// }
+
+	// Print all data
+	i = 0;
+	// while (i < obj->data_index) {
+	// 	printf("%f | ", obj->data[i * 3]);
+	// 	printf("%f | ", obj->data[i * 3 + 1]);
+	// 	printf("%f\n", obj->data[i * 3 + 2]);
+	// 	i++;
+	// }
+	// ft_putnbr(obj->data_index);
+	while(!glfwWindowShouldClose(window)) {
+		// wipe the drawing surface clear
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(shader_program);
+		glBindVertexArray(vao_obj);
+		// draw points 0-3 from the currently bound VAO with current in-use shader
+		glDrawArrays(GL_TRIANGLES, 0, obj->data_index * 3);
+		// update other events like input handling
+		glfwPollEvents();
+		// put the stuff we've been drawing onto the display
+		glfwSwapBuffers(window);
+	}
+
+	// Close GL context and any other GLFW resources
+	glfwTerminate();
+	return (0);
 }
