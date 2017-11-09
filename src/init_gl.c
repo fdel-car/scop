@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 17:39:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/07 17:57:32 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/09 19:43:52 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,48 @@
 
 const GLchar	*vertex_shader_source = "#version 410 core\n"
     "in vec3 vertices;\n"
+    "in vec3 normals;\n"
+    "out vec3 data_normals;\n"
+    "out vec3 data_vertices;\n"
+    "uniform mat4 model;\n"
+    "uniform mat4 projection;\n"
+    "uniform mat4 view;\n"
     "void main()\n"
     "{\n"
-    "gl_Position = vec4(vertices, 1.0);\n"
+    "gl_Position = projection * view * model * vec4(vertices, 1.0);\n"
+    "data_normals = normals;\n"
+    "data_vertices = vertices;\n"
     "}\0";
 
 const GLchar	*frag_shader_source = "#version 410 core\n"
     "out vec4 frag_color;\n"
+    "in vec3 data_normals;\n"
+    "in vec3 data_vertices;\n"
+    "uniform mat4 model;\n"
+    "uniform struct s_light {\n"
+       "vec3 position;\n"
+       "vec3 color;\n"
+    "} t_light;\n"
+    "uniform vec3 obj_color;\n"
     "void main()\n"
     "{\n"
-    "frag_color = vec4(0.5f, 0.5f, 0.5f, 1.0f);\n"
+    // Calculate normal in world coordinates
+    "mat3 normal_matrix = transpose(inverse(mat3(model)));\n"
+    "vec3 normal = normalize(normal_matrix * data_normals);\n"
+    // Calculate the location of this fragment (pixel) in world coordinates
+    "vec3 frag_position = vec3(model * vec4(data_vertices, 1));\n"
+    // Calculate the vector from this pixels surface to the light source
+    "vec3 surface_to_light = t_light.position - frag_position;\n"
+    // Calculate the cosine of the angle of incidence
+    "float brightness = dot(normal, surface_to_light) / (length(surface_to_light) * length(normal));\n"
+    "brightness = clamp(brightness, 0, 1);\n"
+    "vec4 surface_color = vec4(obj_color, 1);\n"
+    "frag_color = vec4(brightness * t_light.color * surface_color.xyz, surface_color.w);\n"
     "}\0";
 
-GLfloat init_shaders(void)
+GLuint init_shaders(void)
 {
-    GLfloat shader_program;
+    GLuint shader_program;
     GLuint vertex_shader;
     GLuint frag_shader;
     GLchar info_log[512];

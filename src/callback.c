@@ -1,0 +1,103 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   callback.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/02/07 19:38:39 by fdel-car          #+#    #+#             */
+/*   Updated: 2017/11/09 17:08:06 by fdel-car         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "scop.h"
+
+void	move_camera(void)
+{
+	t_vec3 front;
+
+	front.x = cos(g_env.yaw * M_PI / 180) * cos(g_env.pitch * M_PI / 180);
+	front.y = sin(g_env.pitch * M_PI / 180);
+	front.z = sin(g_env.yaw * M_PI / 180) * cos(g_env.pitch * M_PI / 180);
+	g_env.front = vec_norm(front);
+}
+
+void	use_key(void)
+{
+	if (g_env.input[GLFW_KEY_A])
+	{
+		g_env.yaw -= 0.25f * (g_env.fov / 15.0f);
+		move_camera();
+	}
+	if (g_env.input[GLFW_KEY_D])
+	{
+		g_env.yaw += 0.25f * (g_env.fov / 15.0f);
+		move_camera();
+	}
+	if (g_env.input[GLFW_KEY_W])
+	{
+		g_env.pitch += 0.25f * (g_env.fov / 15.0f);
+		if (g_env.pitch > 89.0f)
+		    g_env.pitch = 89.0f;
+		move_camera();
+	}
+	if (g_env.input[GLFW_KEY_S])
+	{
+		g_env.pitch -= 0.25f * (g_env.fov / 15.0f);
+		if (g_env.pitch < -89.0f)
+			g_env.pitch = -89.0f;
+		move_camera();
+	}
+}
+
+void	scroll_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (g_env.start)
+    {
+        g_env.last_x = xpos;
+        g_env.last_y = ypos;
+        g_env.start = 0;
+    }
+	if (ypos > 0) {
+		if (g_env.fov > 0.75f)
+			g_env.fov -= ypos * 0.5f;
+	}
+	if (ypos < 0) {
+		if (g_env.fov < 90.0f)
+			g_env.fov -= ypos * 0.5f;
+	}
+	(void)xpos;
+	(void)window;
+}
+
+void	mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (g_env.start)
+    {
+        g_env.last_x = xpos;
+        g_env.last_y = ypos;
+        g_env.start = 0;
+    }
+    GLfloat xoffset = xpos - g_env.last_x;
+    GLfloat yoffset = g_env.last_y - ypos;
+    g_env.last_x = xpos;
+    g_env.last_y = ypos;
+    GLfloat sensitivity = 0.025f * (g_env.fov / 15.0f);
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+    g_env.rot_y += xoffset;
+    g_env.rot_x -= yoffset;
+	(void)window;
+}
+
+void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+	if (action == GLFW_PRESS)
+		g_env.input[key] = 1;
+	else if(action == GLFW_RELEASE)
+		g_env.input[key] = 0;
+	(void)scancode;
+	(void)mode;
+}

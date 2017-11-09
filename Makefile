@@ -6,15 +6,15 @@
 #    By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/01/25 18:47:49 by fdel-car          #+#    #+#              #
-#    Updated: 2017/11/07 17:59:07 by fdel-car         ###   ########.fr        #
+#    Updated: 2017/11/09 11:52:53 by fdel-car         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = scop
 
-SRCS = src/main.c src/load_obj.c src/init_gl.c
+SRCS = src/main.c src/load_obj.c src/init_gl.c src/matrice.c src/vector.c src/callback.c
 
-OBJS = main.o load_obj.o init_gl.o
+OBJS = main.o load_obj.o init_gl.o matrice.o vector.o callback.o
 
 CFLAGS = # -Wall -Wextra -Werror
 
