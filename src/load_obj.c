@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:59:30 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/23 17:45:25 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/23 18:14:53 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,8 +170,66 @@ void	load_data(char *line, t_obj *obj)
 			obj->data_index++;
 			iter++;
 		}
-	} else {
-		throw_error(":PARSER: Triangulate the .obj before running again the program, use Blender for instance.");
+	} else if (iter == 5)
+	{
+		iter = 1;
+		while (iter < 4)
+		{
+			while ((obj->data_index + 1) * DATA_SIZE > obj->size_data)
+			{
+				ft_putendl("Not enough size in data array, reallocing...");
+				obj->size_data *= 2;
+				obj->data = (GLfloat *)realloc(obj->data, sizeof(GLfloat) * obj->size_data);
+				if (!obj->data) {
+					throw_error(":MEMORY: Malloc error, the data array is probably getting too large.");
+				}
+			}
+			tmp = 0;
+			each = ft_strsplit(tab[iter], '/');
+			if (each[tmp] && obj->nb_vertices)
+				load_data_vertices(obj, ft_atoi(each[tmp++]) - 1);
+			if (each[tmp] && obj->nb_textures)
+				load_data_textures(obj, ft_atoi(each[tmp++]) - 1);
+			if (each[tmp] && obj->nb_normals)
+				load_data_normals(obj, ft_atoi(each[tmp++]) - 1);
+			tmp = 0;
+			while (each[tmp])
+				free(each[tmp++]);
+			free(each);
+			obj->data_index++;
+			iter++;
+		}
+		iter = 3;
+		while (iter != 2)
+		{
+			while ((obj->data_index + 1) * DATA_SIZE > obj->size_data)
+			{
+				ft_putendl("Not enough size in data array, reallocing...");
+				obj->size_data *= 2;
+				obj->data = (GLfloat *)realloc(obj->data, sizeof(GLfloat) * obj->size_data);
+				if (!obj->data) {
+					throw_error(":MEMORY: Malloc error, the data array is probably getting too large.");
+				}
+			}
+			tmp = 0;
+			each = ft_strsplit(tab[iter], '/');
+			if (each[tmp] && obj->nb_vertices)
+				load_data_vertices(obj, ft_atoi(each[tmp++]) - 1);
+			if (each[tmp] && obj->nb_textures)
+				load_data_textures(obj, ft_atoi(each[tmp++]) - 1);
+			if (each[tmp] && obj->nb_normals)
+				load_data_normals(obj, ft_atoi(each[tmp++]) - 1);
+			tmp = 0;
+			while (each[tmp])
+				free(each[tmp++]);
+			free(each);
+			obj->data_index++;
+			iter++;
+			if (iter == 5)
+				iter = 1;
+		}
+	} else if (iter > 5) {
+		throw_error(":PARSER: The .obj has complex polygon with more than 4 sides.");
 	}
 	iter = 0;
 	while (tab[iter])
@@ -238,6 +296,37 @@ void	pre_compute_data(char *path, t_obj *obj)
 	g_env.c_pos.z += 1.0f * obj->range;
 }
 
+void	init_normals(t_obj *obj)
+{
+	int		tmp;
+	int		iter;
+	t_vec3	u[4];
+
+	iter = 0;
+	while (iter < obj->data_index)
+	{
+		u[0] = vec_new(obj->data[iter * DATA_SIZE],
+		obj->data[iter * DATA_SIZE + 1], obj->data[iter * DATA_SIZE + 2]);
+		iter++;
+		u[1] = vec_new(obj->data[iter * DATA_SIZE],
+		obj->data[iter * DATA_SIZE + 1], obj->data[iter * DATA_SIZE + 2]);
+		iter++;
+		u[2] = vec_new(obj->data[iter * DATA_SIZE],
+		obj->data[iter * DATA_SIZE + 1], obj->data[iter * DATA_SIZE + 2]);
+		iter++;
+		u[3] = vec_norm(cross_product(vec_sub(u[0], u[1]),
+		vec_sub(u[0], u[2])));
+		tmp = 0;
+		while (tmp < 3)
+		{
+			obj->data[(iter - 3) * DATA_SIZE + tmp * DATA_SIZE + 5] = u[3].x;
+			obj->data[(iter - 3) * DATA_SIZE + tmp * DATA_SIZE + 6] = u[3].y;
+			obj->data[(iter - 3) * DATA_SIZE + tmp * DATA_SIZE + 7] = u[3].z;
+			tmp++;
+		}
+	}
+}
+
 t_obj	*load_obj(char *path)
 {
 	char	*line;
@@ -249,11 +338,11 @@ t_obj	*load_obj(char *path)
 	obj->vertices = (GLfloat *)malloc(sizeof(GLfloat) * START_SIZE);
 	obj->textures = (GLfloat *)malloc(sizeof(GLfloat) * START_SIZE);
 	obj->normals = (GLfloat *)malloc(sizeof(GLfloat) * START_SIZE);
-	obj->data = (GLfloat *)malloc(sizeof(GLfloat) * START_SIZE);
+	obj->data = (GLfloat *)malloc(sizeof(GLfloat) * START_SIZE * 4);
 	obj->size_vertices = START_SIZE;
 	obj->size_textures = START_SIZE;
 	obj->size_normals = START_SIZE;
-	obj->size_data = START_SIZE;
+	obj->size_data = START_SIZE * 4;
 	obj->nb_vertices = 0;
 	obj->nb_textures = 0;
 	obj->nb_normals = 0;
@@ -280,9 +369,14 @@ t_obj	*load_obj(char *path)
 	}
 	free(line);
 	close(fd);
-	printf("This .obj has %d vertices.\n", obj->nb_vertices / 3);
-	printf("This .obj has %d textures coordinates.\n", obj->nb_textures / 2);
-	printf("This .obj has %d normals.\n", obj->nb_normals / 3);
-	printf("This .obj has %d triangles.\n", obj->data_index / 3);
+	if (obj->nb_normals == 0)
+		init_normals(obj);
+	ft_printf("This .obj has %d vertices.\n", obj->nb_vertices / 3);
+	ft_printf("This .obj has %d textures coordinates.\n", obj->nb_textures / 2);
+	if (obj->nb_normals)
+		ft_printf("This .obj has %d normals.\n", obj->nb_normals / 3);
+	else
+		ft_printf("This .obj did not have normals. They are generated on program start.\n");
+	ft_printf("This .obj has %d triangles.\n", obj->data_index / 3);
 	return (obj);
 }

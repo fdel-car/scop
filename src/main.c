@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/23 17:47:11 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/23 19:14:11 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int		main(int ac, char **av)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	// glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "scop_2.0", NULL, NULL);
 	if (!window) {
@@ -116,26 +116,25 @@ int		main(int ac, char **av)
 		GLfloat frame = glfwGetTime();
 		g_env.delta_time = frame - g_env.last_frame;
 		g_env.last_frame = frame;
-        glfwPollEvents();
+		glfwPollEvents();
 		use_key();
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shader_program);
-		GLfloat *view = look_at4x4(g_env.c_pos, vec_add(g_env.c_pos, g_env.front), up);
+		GLfloat *view = look_at4x4(g_env.c_pos, vec_add(g_env.c_pos,
+		g_env.front), up);
 		GLfloat *projection = perspective_projection(g_env.fov,
-		(float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+		(float)WIDTH / (float)HEIGHT, 0.1f, obj->range * 2.0f);
 		GLuint projection_loc = glGetUniformLocation(shader_program, "projection");
 		GLint light_pos_loc = glGetUniformLocation(shader_program, "t_light.position");
 		GLint obj_color_loc = glGetUniformLocation(shader_program, "obj_color");
 		GLint light_color_loc = glGetUniformLocation(shader_program, "t_light.color");
-		// GLint c_pos_loc = glGetUniformLocation(shader_program, "c_pos");
 		glUniformMatrix4fv(projection_loc, 1, GL_FALSE, projection);
 		free(projection);
 		glUniform3f(obj_color_loc, 0.5f, 0.5f, 0.5f);
-		glUniform3f(light_color_loc,  0.9f, 0.9f, 0.9f);
+		glUniform3f(light_color_loc,  1.0f, 1.0f, 1.0f);
 		glUniform3f(light_pos_loc, g_env.c_pos.x, g_env.c_pos.y, g_env.c_pos.z);
-		// glUniform3f(c_pos_loc, g_env.c_pos.x, g_env.c_pos.y, g_env.c_pos.z);
-        glBindVertexArray(vao_obj);
+		glBindVertexArray(vao_obj);
 		GLuint view_location = glGetUniformLocation(shader_program, "view");
 		glUniformMatrix4fv(view_location, 1, GL_FALSE, view);
 		GLfloat *rotate_x = rotate4x4_x(g_env.rot_x);
@@ -145,10 +144,10 @@ int		main(int ac, char **av)
 		free(rotate_y);
 		GLuint model_location = glGetUniformLocation(shader_program, "model");
 		glUniformMatrix4fv(model_location, 1, GL_FALSE, model_obj);
-		glDrawArrays(GL_TRIANGLES, 0, obj->data_index * DATA_SIZE);
+		glDrawArrays(GL_TRIANGLES, 0, obj->data_index * 3);
 		free(model_obj);
-        glBindVertexArray(0);
-        glfwSwapBuffers(window);
+		glBindVertexArray(0);
+		glfwSwapBuffers(window);
 		free(view);
     }
     glDeleteVertexArrays(1, &vao_obj);
