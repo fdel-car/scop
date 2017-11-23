@@ -6,15 +6,16 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 17:39:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/09 19:43:52 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/23 17:50:57 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 
 const GLchar	*vertex_shader_source = "#version 410 core\n"
-    "in vec3 vertices;\n"
-    "in vec3 normals;\n"
+    "layout (location = 0) in vec3 vertices;\n"
+    "layout (location = 1) in vec2 textures;\n"
+    "layout (location = 2) in vec3 normals;\n"
     "out vec3 data_normals;\n"
     "out vec3 data_vertices;\n"
     "uniform mat4 model;\n"
@@ -48,6 +49,9 @@ const GLchar	*frag_shader_source = "#version 410 core\n"
     "vec3 surface_to_light = t_light.position - frag_position;\n"
     // Calculate the cosine of the angle of incidence
     "float brightness = dot(normal, surface_to_light) / (length(surface_to_light) * length(normal));\n"
+    // "if (brightness < 0) {\n"
+    //     "brightness *= -1;\n"
+    // "}\n"
     "brightness = clamp(brightness, 0, 1);\n"
     "vec4 surface_color = vec4(obj_color, 1);\n"
     "frag_color = vec4(brightness * t_light.color * surface_color.xyz, surface_color.w);\n"

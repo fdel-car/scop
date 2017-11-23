@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/09 19:57:37 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/23 17:47:11 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,10 @@ int		main(int ac, char **av)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * obj->data_index * DATA_SIZE, obj->data, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	// Wireframe mode
@@ -129,7 +131,7 @@ int		main(int ac, char **av)
 		// GLint c_pos_loc = glGetUniformLocation(shader_program, "c_pos");
 		glUniformMatrix4fv(projection_loc, 1, GL_FALSE, projection);
 		free(projection);
-		glUniform3f(obj_color_loc, 0.8f, 0.8f, 0.5f);
+		glUniform3f(obj_color_loc, 0.5f, 0.5f, 0.5f);
 		glUniform3f(light_color_loc,  0.9f, 0.9f, 0.9f);
 		glUniform3f(light_pos_loc, g_env.c_pos.x, g_env.c_pos.y, g_env.c_pos.z);
 		// glUniform3f(c_pos_loc, g_env.c_pos.x, g_env.c_pos.y, g_env.c_pos.z);

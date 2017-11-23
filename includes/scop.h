@@ -6,14 +6,14 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 16:28:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/09 18:41:23 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/23 17:45:35 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # define WIDTH 1920
 # define HEIGHT 1080
 # define START_SIZE 8192
-# define DATA_SIZE 6
+# define DATA_SIZE 8
 # define EPSILON 0.001
 # define SQ(x) ((x) * (x))
 
@@ -36,11 +36,14 @@ typedef struct	s_vec3
 
 typedef	struct	s_obj {
 	GLfloat		*vertices;
+	GLfloat		*textures;
 	GLfloat		*normals;
 	GLfloat		*data;
 	GLint		nb_vertices;
+	GLint		nb_textures;
 	GLint		nb_normals;
 	GLint		size_normals;
+	GLint		size_textures;
 	GLint		size_vertices;
 	GLint		size_data;
 	GLint		data_index;

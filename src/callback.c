@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 19:38:39 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/09 17:08:06 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/23 16:54:05 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,18 @@ void	scroll_callback(GLFWwindow* window, double xpos, double ypos)
         g_env.start = 0;
     }
 	if (ypos > 0) {
-		if (g_env.fov > 0.75f)
+		if (g_env.fov > 1.0f) {
 			g_env.fov -= ypos * 0.5f;
+			if (g_env.fov < 1.0f)
+				g_env.fov = 1.0f;
+		}
 	}
 	if (ypos < 0) {
-		if (g_env.fov < 90.0f)
+		if (g_env.fov < 90.0f) {
 			g_env.fov -= ypos * 0.5f;
+			if (g_env.fov > 90.0f)
+				g_env.fov = 90.0f;
+		}
 	}
 	(void)xpos;
 	(void)window;
