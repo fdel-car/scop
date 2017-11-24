@@ -6,14 +6,14 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 16:28:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/23 19:09:32 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/24 17:25:12 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # define WIDTH 1920
 # define HEIGHT 1080
 # define START_SIZE 8192
-# define DATA_SIZE 8
+# define DATA_SIZE 11
 # define EPSILON 0.001
 # define SQ(x) ((x) * (x))
 
@@ -38,6 +38,7 @@ typedef	struct	s_obj {
 	GLfloat		*vertices;
 	GLfloat		*textures;
 	GLfloat		*normals;
+	GLfloat		*colors;
 	GLfloat		*data;
 	GLint		nb_vertices;
 	GLint		nb_textures;
@@ -57,6 +58,7 @@ typedef	struct	s_obj {
 	GLfloat		max_y;
 	GLfloat		max_z;
 	GLfloat		range;
+	t_vec3		current_color;
 }				t_obj;
 
 typedef	struct	s_env
@@ -74,12 +76,13 @@ typedef	struct	s_env
 	GLfloat		last_y;
 	GLfloat		rot_x;
 	GLfloat		rot_y;
+	GLuint		shader_program;
 }				t_env;
 
 t_env	g_env;
 
 t_obj	*load_obj(char *str);
-GLuint	init_shaders(void);
+void	init_shaders(void);
 t_vec3	vec_scalaire(t_vec3 u, float value);
 t_vec3	vec_mult(t_vec3 u, t_vec3 v);
 t_vec3	vec_sub(t_vec3 u, t_vec3 v);

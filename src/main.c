@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/23 19:14:11 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/24 17:50:34 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	init_env(void)
 {
 	int iter;
 
-	g_env.c_pos = vec_new(0, 0, 2);
+	g_env.c_pos = vec_new(0, 0, 0);
 	g_env.front = vec_new(0, 0, -1);
 	iter = 0;
 	while (iter < 1024)
@@ -33,7 +33,6 @@ void	init_env(void)
 
 int		main(int ac, char **av)
 {
-	GLfloat	shader_program;
 	t_vec3	up = vec_new(0, 1, 0);
 	int			width;
 	int			height;
@@ -80,8 +79,7 @@ int		main(int ac, char **av)
 	glEnable(GL_DEPTH_TEST); // Enable depth-testing
 	glDepthFunc(GL_LESS);
 	glEnable(GL_MULTISAMPLE);
-
-	shader_program = init_shaders();
+	init_shaders();
 
 	/* OTHER STUFF GOES HERE NEXT */
 	if (ac != 2) {
@@ -107,10 +105,23 @@ int		main(int ac, char **av)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(8 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(3);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	// Wireframe mode
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glUseProgram(g_env.shader_program);
+	GLint light_pos_loc = glGetUniformLocation(g_env.shader_program, "t_light.position");
+	GLint light_color_loc = glGetUniformLocation(g_env.shader_program, "t_light.color");
+	GLint obj_color_loc = glGetUniformLocation(g_env.shader_program, "obj_color");
+	glUniform3f(light_pos_loc, g_env.c_pos.x, g_env.c_pos.y, g_env.c_pos.z);
+	glUniform3f(light_color_loc,  1.0f, 1.0f, 1.0f);
+	glUniform3f(obj_color_loc, 0.5f, 0.5f, 0.5f);
+	GLuint projection_loc = glGetUniformLocation(g_env.shader_program, "projection");
+	GLuint view_location = glGetUniformLocation(g_env.shader_program, "view");
+	GLuint model_location = glGetUniformLocation(g_env.shader_program, "model");
+
 	while (!glfwWindowShouldClose(window))
     {
 		GLfloat frame = glfwGetTime();
@@ -120,35 +131,26 @@ int		main(int ac, char **av)
 		use_key();
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUseProgram(shader_program);
 		GLfloat *view = look_at4x4(g_env.c_pos, vec_add(g_env.c_pos,
 		g_env.front), up);
 		GLfloat *projection = perspective_projection(g_env.fov,
-		(float)WIDTH / (float)HEIGHT, 0.1f, obj->range * 2.0f);
-		GLuint projection_loc = glGetUniformLocation(shader_program, "projection");
-		GLint light_pos_loc = glGetUniformLocation(shader_program, "t_light.position");
-		GLint obj_color_loc = glGetUniformLocation(shader_program, "obj_color");
-		GLint light_color_loc = glGetUniformLocation(shader_program, "t_light.color");
+		(float)WIDTH / (float)HEIGHT, 0.1f, obj->range);
 		glUniformMatrix4fv(projection_loc, 1, GL_FALSE, projection);
 		free(projection);
-		glUniform3f(obj_color_loc, 0.5f, 0.5f, 0.5f);
-		glUniform3f(light_color_loc,  1.0f, 1.0f, 1.0f);
-		glUniform3f(light_pos_loc, g_env.c_pos.x, g_env.c_pos.y, g_env.c_pos.z);
 		glBindVertexArray(vao_obj);
-		GLuint view_location = glGetUniformLocation(shader_program, "view");
 		glUniformMatrix4fv(view_location, 1, GL_FALSE, view);
 		GLfloat *rotate_x = rotate4x4_x(g_env.rot_x);
 		GLfloat *rotate_y = rotate4x4_y(g_env.rot_y);
 		GLfloat *model_obj = mult_matrice4x4(rotate_x, rotate_y);
 		free(rotate_x);
 		free(rotate_y);
-		GLuint model_location = glGetUniformLocation(shader_program, "model");
 		glUniformMatrix4fv(model_location, 1, GL_FALSE, model_obj);
 		glDrawArrays(GL_TRIANGLES, 0, obj->data_index * 3);
 		free(model_obj);
 		glBindVertexArray(0);
 		glfwSwapBuffers(window);
 		free(view);
+		// printf("FPS : %f\n", 1.0f / (g_env.delta_time));
     }
     glDeleteVertexArrays(1, &vao_obj);
     glDeleteBuffers(1, &vbo_obj);

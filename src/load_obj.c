@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:59:30 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/23 18:14:53 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/24 17:56:53 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,9 @@ void	load_data(char *line, t_obj *obj)
 				load_data_textures(obj, ft_atoi(each[tmp++]) - 1);
 			if (each[tmp] && obj->nb_normals)
 				load_data_normals(obj, ft_atoi(each[tmp++]) - 1);
+			obj->data[obj->data_index * DATA_SIZE + 8] = obj->current_color.x;
+			obj->data[obj->data_index * DATA_SIZE + 9] = obj->current_color.y;
+			obj->data[obj->data_index * DATA_SIZE + 10] = obj->current_color.z;
 			tmp = 0;
 			while (each[tmp])
 				free(each[tmp++]);
@@ -192,6 +195,9 @@ void	load_data(char *line, t_obj *obj)
 				load_data_textures(obj, ft_atoi(each[tmp++]) - 1);
 			if (each[tmp] && obj->nb_normals)
 				load_data_normals(obj, ft_atoi(each[tmp++]) - 1);
+			obj->data[obj->data_index * DATA_SIZE + 8] = obj->current_color.x;
+			obj->data[obj->data_index * DATA_SIZE + 9] = obj->current_color.y;
+			obj->data[obj->data_index * DATA_SIZE + 10] = obj->current_color.z;
 			tmp = 0;
 			while (each[tmp])
 				free(each[tmp++]);
@@ -219,6 +225,9 @@ void	load_data(char *line, t_obj *obj)
 				load_data_textures(obj, ft_atoi(each[tmp++]) - 1);
 			if (each[tmp] && obj->nb_normals)
 				load_data_normals(obj, ft_atoi(each[tmp++]) - 1);
+			obj->data[obj->data_index * DATA_SIZE + 8] = obj->current_color.x;
+			obj->data[obj->data_index * DATA_SIZE + 9] = obj->current_color.y;
+			obj->data[obj->data_index * DATA_SIZE + 10] = obj->current_color.z;
 			tmp = 0;
 			while (each[tmp])
 				free(each[tmp++]);
@@ -327,6 +336,82 @@ void	init_normals(t_obj *obj)
 	}
 }
 
+int		load_material_data(char *use, char *new, int fd, t_obj *obj)
+{
+	char	**tmp;
+	char	**each;
+	char	*line;
+	int     iter;
+
+	iter = 0;
+	tmp = ft_strsplit(new, ' ');
+	if (ft_strcmp(tmp[1], use) == 0)
+	{
+		while (get_next_line(fd, &line))
+		{
+			if (line[0] == 'K' && line[1] == 'd' && line[2] == ' ')
+			{
+				each = ft_strsplit(line, ' ');
+				obj->current_color.x = ft_atof(each[1]);
+				obj->current_color.y = ft_atof(each[2]);
+				obj->current_color.z = ft_atof(each[3]);
+				while (each[iter])
+					free(each[iter++]);
+				free(each);
+				iter = 0;
+				break;
+			}
+			free(line);
+		}
+		free(line);
+		while (tmp[iter])
+			free(tmp[iter++]);
+		free(tmp);
+		return (1);
+	}
+	while (tmp[iter])
+		free(tmp[iter++]);
+	free(tmp);
+	return (0);
+}
+
+void	load_material(char *str, t_obj *obj, char *path)
+{
+	char	*line;
+	char	**tmp;
+	int     iter;
+	int     fd;
+
+	if ((fd = open(path, O_RDONLY)) < 0)
+		throw_error(":PARSER: Incorrect material file name.");
+	tmp = ft_strsplit(str, ' ');
+	while (get_next_line(fd, &line))
+	{
+		if (line[0] == 'n' && line[1] == 'e' && line[2] == 'w' &&
+		line[3] == 'm' && line[4] == 't' && line[5] == 'l' && line[6] == ' ')
+			if (load_material_data(tmp[1], line, fd, obj))
+				break;
+		free(line);
+	}
+	free(line);
+	iter = 0;
+	while (tmp[iter])
+		free(tmp[iter++]);
+	free(tmp);
+	close(fd);
+}
+
+char	*material_path(char *path)
+{
+	int	l;
+
+	l = ft_strlen(path);
+	path[l - 1] = 'l';
+	path[l - 2] = 't';
+	path[l - 3] = 'm';
+	return (path);
+}
+
 t_obj	*load_obj(char *path)
 {
 	char	*line;
@@ -347,6 +432,7 @@ t_obj	*load_obj(char *path)
 	obj->nb_textures = 0;
 	obj->nb_normals = 0;
 	obj->data_index = 0;
+	obj->current_color = vec_new(0.64f, 0.64f, 0.64f);
 	if (!obj || !obj->vertices || !obj->data) {
 		return NULL;
 	}
@@ -363,6 +449,9 @@ t_obj	*load_obj(char *path)
 			load_textures(line, obj);
 		if (line[0] == 'v' && line[1] == 'n')
 			load_normals(line, obj);
+		if (line[0] == 'u' && line[1] == 's' && line[2] == 'e' &&
+		line[3] == 'm' && line[4] == 't' && line[5] == 'l' && line[6] == ' ')
+			load_material(line, obj, material_path(path));
 		if (line[0] == 'f' && line[1] == ' ')
 			load_data(line, obj);
 		free(line);
