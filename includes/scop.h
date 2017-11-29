@@ -6,14 +6,14 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 16:28:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/24 17:25:12 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/29 17:11:32 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # define WIDTH 1920
 # define HEIGHT 1080
 # define START_SIZE 8192
-# define DATA_SIZE 11
+# define DATA_SIZE 12
 # define EPSILON 0.001
 # define SQ(x) ((x) * (x))
 
@@ -34,7 +34,17 @@ typedef struct	s_vec3
 	GLfloat		z;
 }				t_vec3;
 
+typedef struct		s_text
+{
+	int				tex_w;
+	int				tex_h;
+	int				size[2];
+	unsigned char	buff[4];
+	unsigned char	*img;
+}					t_text;
+
 typedef	struct	s_obj {
+	GLint		sampler2D[16];
 	GLfloat		*vertices;
 	GLfloat		*textures;
 	GLfloat		*normals;
@@ -59,6 +69,10 @@ typedef	struct	s_obj {
 	GLfloat		max_z;
 	GLfloat		range;
 	t_vec3		current_color;
+	GLint		tex_indice;
+	GLint		last_indice;
+	short		item_textured;
+	char		*path;
 }				t_obj;
 
 typedef	struct	s_env
@@ -77,10 +91,14 @@ typedef	struct	s_env
 	GLfloat		rot_x;
 	GLfloat		rot_y;
 	GLuint		shader_program;
+	GLint		textured;
 }				t_env;
 
 t_env	g_env;
 
+void	set_texture(t_obj *obj);
+t_text	*load_texture(char *path);
+int		generate_texture(char *path);
 t_obj	*load_obj(char *str);
 void	init_shaders(void);
 t_vec3	vec_scalaire(t_vec3 u, float value);

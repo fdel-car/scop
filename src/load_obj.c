@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:59:30 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/24 17:56:53 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/29 17:49:13 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,10 @@ void	load_data(char *line, t_obj *obj)
 			obj->data[obj->data_index * DATA_SIZE + 8] = obj->current_color.x;
 			obj->data[obj->data_index * DATA_SIZE + 9] = obj->current_color.y;
 			obj->data[obj->data_index * DATA_SIZE + 10] = obj->current_color.z;
+			if (obj->item_textured == 1)
+				obj->data[obj->data_index * DATA_SIZE + 11] = (float)obj->tex_indice + EPSILON;
+			else
+				obj->data[obj->data_index * DATA_SIZE + 11] = -1.0f - EPSILON;
 			tmp = 0;
 			while (each[tmp])
 				free(each[tmp++]);
@@ -198,6 +202,10 @@ void	load_data(char *line, t_obj *obj)
 			obj->data[obj->data_index * DATA_SIZE + 8] = obj->current_color.x;
 			obj->data[obj->data_index * DATA_SIZE + 9] = obj->current_color.y;
 			obj->data[obj->data_index * DATA_SIZE + 10] = obj->current_color.z;
+			if (obj->item_textured == 1)
+				obj->data[obj->data_index * DATA_SIZE + 11] = (float)obj->tex_indice + EPSILON;
+			else
+				obj->data[obj->data_index * DATA_SIZE + 11] = -1.0f - EPSILON;
 			tmp = 0;
 			while (each[tmp])
 				free(each[tmp++]);
@@ -228,6 +236,10 @@ void	load_data(char *line, t_obj *obj)
 			obj->data[obj->data_index * DATA_SIZE + 8] = obj->current_color.x;
 			obj->data[obj->data_index * DATA_SIZE + 9] = obj->current_color.y;
 			obj->data[obj->data_index * DATA_SIZE + 10] = obj->current_color.z;
+			if (obj->item_textured == 1)
+				obj->data[obj->data_index * DATA_SIZE + 11] = (float)obj->tex_indice + EPSILON;
+			else
+				obj->data[obj->data_index * DATA_SIZE + 11] = -1.0f - EPSILON;
 			tmp = 0;
 			while (each[tmp])
 				free(each[tmp++]);
@@ -336,6 +348,69 @@ void	init_normals(t_obj *obj)
 	}
 }
 
+void	set_texture(t_obj *obj)
+{
+	int		iter = 0;
+	char	*tmp;
+	char	*nbr;
+
+	while (iter <= obj->tex_indice)
+	{
+		nbr = ft_itoa(iter);
+		glActiveTexture(GL_TEXTURE0 + iter);
+		glBindTexture(GL_TEXTURE_2D, obj->sampler2D[iter]);
+		tmp = ft_strjoin("obj_texture[", nbr);
+		free(nbr);
+		nbr = ft_strjoin(tmp, "]");
+		free(tmp);
+		glUniform1i(glGetUniformLocation(g_env.shader_program, nbr), iter);
+		free(nbr);
+		iter++;
+	}
+}
+
+int		end_by(char *s, char *end)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	j = -1;
+	while (s[++i])
+		;
+	while (end[++j])
+		;
+	i--;
+	j--;
+	while (j >= 0 && end[j] && s[i])
+	{
+		if (s[i] != end[j])
+			return (0);
+		j--;
+		i--;
+	}
+	return (1);
+}
+
+void	handle_texture(char *line, t_obj *obj)
+{
+	char	**tab;
+	char	*path;
+
+	tab = ft_strsplit(line, ' ');
+	path = ft_strjoin(obj->path, tab[1]);
+	if (end_by(path, ".bmp"))
+		obj->sampler2D[obj->tex_indice] = generate_texture(path);
+	if (obj->sampler2D[obj->tex_indice] != -1)
+		g_env.textured = 1;
+	glActiveTexture(GL_TEXTURE0 + obj->tex_indice);
+	int iter = 0;
+	while (tab[iter])
+		free(tab[iter++]);
+	free(tab);
+	free(path);
+}
+
 int		load_material_data(char *use, char *new, int fd, t_obj *obj)
 {
 	char	**tmp;
@@ -359,8 +434,18 @@ int		load_material_data(char *use, char *new, int fd, t_obj *obj)
 					free(each[iter++]);
 				free(each);
 				iter = 0;
-				break;
 			}
+			if (line[0] == 'm' && line[1] == 'a' && line[2] == 'p' &&
+			line[3] == '_' && line[4] == 'K' && line[5] == 'd' && line[6] == ' ')
+			{
+				obj->item_textured = 1;
+				obj->tex_indice++;
+				handle_texture(line, obj);
+				break ;
+			}
+			if (line[0] == 'n' && line[1] == 'e' && line[2] == 'w' &&
+			line[3] == 'm' && line[4] == 't' && line[5] == 'l' && line[6] == ' ')
+				break;
 			free(line);
 		}
 		free(line);
@@ -382,6 +467,7 @@ void	load_material(char *str, t_obj *obj, char *path)
 	int     iter;
 	int     fd;
 
+	obj->item_textured = 0;
 	if ((fd = open(path, O_RDONLY)) < 0)
 		throw_error(":PARSER: Incorrect material file name.");
 	tmp = ft_strsplit(str, ' ');
@@ -433,6 +519,15 @@ t_obj	*load_obj(char *path)
 	obj->nb_normals = 0;
 	obj->data_index = 0;
 	obj->current_color = vec_new(0.64f, 0.64f, 0.64f);
+	int l = ft_strlen(path);
+	while (path[l - 1] != '/')
+		l--;
+	obj->path = ft_strndup(path, l + 1);
+	obj->path[l] = 0;
+	int i = 0;
+	while (i < 16)
+		obj->sampler2D[i++] = -1;
+	obj->tex_indice = -1;
 	if (!obj || !obj->vertices || !obj->data) {
 		return NULL;
 	}

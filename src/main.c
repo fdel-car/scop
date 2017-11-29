@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/24 17:50:34 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/29 17:30:50 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	init_env(void)
 	g_env.pitch = 0.0f;
 	g_env.rot_x = 0.0f;
 	g_env.rot_y = 0.0f;
+	g_env.textured = 0;
 }
 
 int		main(int ac, char **av)
@@ -107,6 +108,8 @@ int		main(int ac, char **av)
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(8 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(11 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(4);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	// Wireframe mode
@@ -114,10 +117,8 @@ int		main(int ac, char **av)
 	glUseProgram(g_env.shader_program);
 	GLint light_pos_loc = glGetUniformLocation(g_env.shader_program, "t_light.position");
 	GLint light_color_loc = glGetUniformLocation(g_env.shader_program, "t_light.color");
-	GLint obj_color_loc = glGetUniformLocation(g_env.shader_program, "obj_color");
 	glUniform3f(light_pos_loc, g_env.c_pos.x, g_env.c_pos.y, g_env.c_pos.z);
 	glUniform3f(light_color_loc,  1.0f, 1.0f, 1.0f);
-	glUniform3f(obj_color_loc, 0.5f, 0.5f, 0.5f);
 	GLuint projection_loc = glGetUniformLocation(g_env.shader_program, "projection");
 	GLuint view_location = glGetUniformLocation(g_env.shader_program, "view");
 	GLuint model_location = glGetUniformLocation(g_env.shader_program, "model");
@@ -131,6 +132,10 @@ int		main(int ac, char **av)
 		use_key();
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUniform1i(glGetUniformLocation(g_env.shader_program, "is_textured"),
+		g_env.textured);
+		if (g_env.textured)
+			set_texture(obj);
 		GLfloat *view = look_at4x4(g_env.c_pos, vec_add(g_env.c_pos,
 		g_env.front), up);
 		GLfloat *projection = perspective_projection(g_env.fov,
