@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:59:30 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/29 17:49:13 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/29 18:37:11 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -358,7 +358,7 @@ void	set_texture(t_obj *obj)
 	{
 		nbr = ft_itoa(iter);
 		glActiveTexture(GL_TEXTURE0 + iter);
-		glBindTexture(GL_TEXTURE_2D, obj->sampler2D[iter]);
+		glBindTexture(GL_TEXTURE_2D, obj->sampler2d[iter]);
 		tmp = ft_strjoin("obj_texture[", nbr);
 		free(nbr);
 		nbr = ft_strjoin(tmp, "]");
@@ -400,8 +400,8 @@ void	handle_texture(char *line, t_obj *obj)
 	tab = ft_strsplit(line, ' ');
 	path = ft_strjoin(obj->path, tab[1]);
 	if (end_by(path, ".bmp"))
-		obj->sampler2D[obj->tex_indice] = generate_texture(path);
-	if (obj->sampler2D[obj->tex_indice] != -1)
+		obj->sampler2d[obj->tex_indice] = generate_texture(path);
+	if (obj->sampler2d[obj->tex_indice] != -1)
 		g_env.textured = 1;
 	glActiveTexture(GL_TEXTURE0 + obj->tex_indice);
 	int iter = 0;
@@ -526,7 +526,7 @@ t_obj	*load_obj(char *path)
 	obj->path[l] = 0;
 	int i = 0;
 	while (i < 16)
-		obj->sampler2D[i++] = -1;
+		obj->sampler2d[i++] = -1;
 	obj->tex_indice = -1;
 	if (!obj || !obj->vertices || !obj->data) {
 		return NULL;

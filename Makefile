@@ -6,7 +6,7 @@
 #    By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/01/25 18:47:49 by fdel-car          #+#    #+#              #
-#    Updated: 2017/11/29 15:11:45 by fdel-car         ###   ########.fr        #
+#    Updated: 2017/11/29 18:52:13 by fdel-car         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,12 +16,11 @@ SRCS = src/main.c src/load_obj.c src/init_gl.c src/matrice.c src/vector.c src/ca
 
 OBJS = main.o load_obj.o init_gl.o matrice.o vector.o callback.o load_texture.o
 
-CFLAGS = # -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
-all: $(NAME)
+all: lib $(NAME)
 
 $(NAME): $(OBJS)
-	# @make re -C libft
 	@gcc  -I./includes `pkg-config --libs glfw3` `pkg-config --libs glew` \
 	-o $@ $^ ./libft/libft.a -framework OpenGL
 	@echo "\033[1;31m$(NAME) compiled successfully"
@@ -30,6 +29,9 @@ $(NAME): $(OBJS)
 $(OBJS): $(SRCS)
 	@clang $(CFLAGS) -c $^ `pkg-config --cflags glfw3` \
 	`pkg-config --cflags glew` -I./libft/includes -I./includes
+
+lib:
+	@make libft
 
 clean:
 	@make clean -C libft
@@ -41,4 +43,4 @@ fclean: clean
 re: fclean
 	make all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re lib
