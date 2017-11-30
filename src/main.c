@@ -6,22 +6,23 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/29 17:30:50 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/30 18:52:53 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 
-void	init_env(void)
+void			init_env(void)
 {
 	int iter;
 
 	g_env.c_pos = vec_new(0, 0, 0);
+	g_env.up = vec_new(0, 1, 0);
 	g_env.front = vec_new(0, 0, -1);
 	iter = 0;
 	while (iter < 1024)
 		g_env.input[iter++] = 0;
-	g_env.start = 1;
+	g_env.initialized = 0;
 	g_env.last_x = WIDTH / 2;
 	g_env.last_y = HEIGHT / 2;
 	g_env.fov = 45.0f;
@@ -32,134 +33,53 @@ void	init_env(void)
 	g_env.textured = 0;
 }
 
-int		main(int ac, char **av)
+GLFWwindow		*init_window(void)
 {
-	t_vec3	up = vec_new(0, 1, 0);
-	int			width;
-	int			height;
-	t_obj		*obj;
+	GLFWwindow *window;
 
-	init_env();
-	// Start GL context and O/S window using the GLFW helper library
-	if (!glfwInit()) {
-		fprintf(stderr, "ERROR: Could not start GLFW3\n");
-		return (-1);
-	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "scop_2.0", NULL, NULL);
-	if (!window) {
-		fprintf(stderr, "ERROR: Could not open window with GLFW3\n");
+	window = glfwCreateWindow(WIDTH, HEIGHT, "scop_2.0", NULL, NULL);
+	if (!window)
+	{
+		ft_printf("ERROR: Could not open window with GLFW3\n");
 		glfwTerminate();
-		return (-1);
+		return (NULL);
 	}
 	glfwMakeContextCurrent(window);
-
-    glfwSetKeyCallback(window, key_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	return (window);
+}
 
-	// Start GLEW extension handler
+int				main(int ac, char **av)
+{
+	GLFWwindow	*window;
+
+	init_env();
+	if (!glfwInit())
+	{
+		ft_printf("ERROR: Could not start GLFW3\n");
+		return (-1);
+	}
+	window = init_window();
+	if (!window)
+		return (-1);
 	glewExperimental = GL_TRUE;
 	glewInit();
-
-	// Get version info
-	const GLubyte* renderer = glGetString(GL_RENDERER);
-	const GLubyte* version = glGetString(GL_VERSION);
-	printf("Renderer: %s\n", renderer);
-	printf("OpenGL version supported %s\n", version);
-
-    glfwGetFramebufferSize(window, &width, &height);
-    glViewport(0, 0, width, height);
-	glEnable(GL_DEPTH_TEST); // Enable depth-testing
-	glDepthFunc(GL_LESS);
-	glEnable(GL_MULTISAMPLE);
+	get_version(window);
 	init_shaders();
-
-	/* OTHER STUFF GOES HERE NEXT */
-	if (ac != 2) {
-		fprintf(stderr, "ERROR: Obj missing in command line\n");
+	if (ac != 2)
+	{
+		ft_printf("ERROR: Obj missing in command line\n");
 		glfwTerminate();
 		return (-1);
 	}
-	obj = load_obj(av[1]);
-	if (obj == NULL) {
-		fprintf(stderr, "ERROR: Obj not parsed correctly, try to import and export it with Blender\n");
-		glfwTerminate();
-		return (-1);
-	}
-	GLuint vbo_obj, vao_obj;
-	glGenVertexArrays(1, &vao_obj);
-	glGenBuffers(1, &vbo_obj);
-	glBindVertexArray(vao_obj);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_obj);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * obj->data_index * DATA_SIZE, obj->data, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(8 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, DATA_SIZE * sizeof(GLfloat), (GLvoid*)(11 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(4);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-	// Wireframe mode
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glUseProgram(g_env.shader_program);
-	GLint light_pos_loc = glGetUniformLocation(g_env.shader_program, "t_light.position");
-	GLint light_color_loc = glGetUniformLocation(g_env.shader_program, "t_light.color");
-	glUniform3f(light_pos_loc, g_env.c_pos.x, g_env.c_pos.y, g_env.c_pos.z);
-	glUniform3f(light_color_loc,  1.0f, 1.0f, 1.0f);
-	GLuint projection_loc = glGetUniformLocation(g_env.shader_program, "projection");
-	GLuint view_location = glGetUniformLocation(g_env.shader_program, "view");
-	GLuint model_location = glGetUniformLocation(g_env.shader_program, "model");
-
-	while (!glfwWindowShouldClose(window))
-    {
-		GLfloat frame = glfwGetTime();
-		g_env.delta_time = frame - g_env.last_frame;
-		g_env.last_frame = frame;
-		glfwPollEvents();
-		use_key();
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUniform1i(glGetUniformLocation(g_env.shader_program, "is_textured"),
-		g_env.textured);
-		if (g_env.textured)
-			set_texture(obj);
-		GLfloat *view = look_at4x4(g_env.c_pos, vec_add(g_env.c_pos,
-		g_env.front), up);
-		GLfloat *projection = perspective_projection(g_env.fov,
-		(float)WIDTH / (float)HEIGHT, 0.1f, obj->range);
-		glUniformMatrix4fv(projection_loc, 1, GL_FALSE, projection);
-		free(projection);
-		glBindVertexArray(vao_obj);
-		glUniformMatrix4fv(view_location, 1, GL_FALSE, view);
-		GLfloat *rotate_x = rotate4x4_x(g_env.rot_x);
-		GLfloat *rotate_y = rotate4x4_y(g_env.rot_y);
-		GLfloat *model_obj = mult_matrice4x4(rotate_x, rotate_y);
-		free(rotate_x);
-		free(rotate_y);
-		glUniformMatrix4fv(model_location, 1, GL_FALSE, model_obj);
-		glDrawArrays(GL_TRIANGLES, 0, obj->data_index * 3);
-		free(model_obj);
-		glBindVertexArray(0);
-		glfwSwapBuffers(window);
-		free(view);
-		// printf("FPS : %f\n", 1.0f / (g_env.delta_time));
-    }
-    glDeleteVertexArrays(1, &vao_obj);
-    glDeleteBuffers(1, &vbo_obj);
-    glfwTerminate();
-	free(obj);
-    return (0);
+	return (unload_main(window, av));
 }

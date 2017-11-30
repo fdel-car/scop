@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 16:28:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/29 19:02:37 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/30 18:40:36 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,25 @@ typedef	struct		s_obj {
 	t_vec3			current_color;
 	GLint			tex_indice;
 	GLint			last_indice;
-	short			item_textured;
+	char			item_textured;
 	char			*path;
 }					t_obj;
 
 typedef	struct		s_env
 {
 	t_vec3			c_pos;
+	t_vec3			up;
 	t_vec3			front;
 	char			input[1024];
-	char			start;
+	char			initialized;
+	GLfloat			*rotate_x;
+	GLfloat			*rotate_y;
+	GLfloat			*model_obj;
+	GLfloat			*projection;
+	GLfloat			*view;
 	GLfloat			delta_time;
 	GLfloat			last_frame;
+	GLfloat			frame;
 	GLfloat			pitch;
 	GLfloat			yaw;
 	GLfloat			fov;
@@ -94,7 +101,12 @@ typedef	struct		s_env
 	GLfloat			rot_x;
 	GLfloat			rot_y;
 	GLuint			shader_program;
+	GLuint			vbo_obj;
+	GLuint			vao_obj;
 	GLint			textured;
+	GLuint			projection_loc;
+	GLuint			view_location;
+	GLuint			model_location;
 }					t_env;
 
 t_env				g_env;
@@ -104,6 +116,7 @@ t_text				*load_texture(char *path);
 int					generate_texture(char *path);
 t_obj				*load_obj(char *str);
 void				init_shaders(void);
+void				load_data(char *line, t_obj *obj);
 t_vec3				vec_scalaire(t_vec3 u, float value);
 t_vec3				vec_mult(t_vec3 u, t_vec3 v);
 t_vec3				vec_sub(t_vec3 u, t_vec3 v);
@@ -120,6 +133,8 @@ GLfloat				*matrice_4x4(GLfloat *u, ...);
 GLfloat				*scale_4x4(float scale);
 GLfloat				*perspective_projection(float fov, float aspect,\
 					float near, float far);
+char				*material_path(char *path);
+void				load_material(char *str, t_obj *obj, char *path);
 GLfloat				*translate4x4(float x, float y, float z);
 GLfloat				*rotate4x4_z(float theta);
 GLfloat				*rotate4x4_y(float theta);
@@ -133,5 +148,18 @@ void				key_callback(GLFWwindow *window, int key, int scancode,\
 					int action, int mode);
 void				scroll_callback(GLFWwindow *window, double xpos,\
 					double ypos);
+void				get_version(GLFWwindow *window);
+int					unload_main(GLFWwindow *window, char **av);
+void				throw_error(char *error);
+void				load_vertices(char *line, t_obj *obj);
+void				load_textures(char *line, t_obj *obj);
+void				load_normals(char *line, t_obj *obj);
+void				load_data_vertices(t_obj *obj, int index);
+void				free_tab(char **tab, int iter);
+void				load_data_textures(t_obj *obj, int index);
+void				load_data_normals(t_obj *obj, int index);
+void				pre_compute_data(char *path, t_obj *obj);
+void				handle_texture(char *line, t_obj *obj);
+void				init_normals(t_obj *obj, int iter);
 
 #endif

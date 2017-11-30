@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 19:38:39 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/29 19:05:34 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/30 18:40:52 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,6 @@ void	use_key(void)
 
 void	scroll_callback(GLFWwindow *window, double xpos, double ypos)
 {
-	if (g_env.start)
-	{
-		g_env.last_x = xpos;
-		g_env.last_y = ypos;
-		g_env.start = 0;
-	}
 	if (ypos > 0)
 		if (g_env.fov > 1.0f)
 		{
@@ -82,11 +76,11 @@ void	mouse_callback(GLFWwindow *window, double xpos, double ypos)
 	GLfloat	xoffset;
 	GLfloat	yoffset;
 
-	if (g_env.start)
+	if (g_env.initialized == 0)
 	{
 		g_env.last_x = xpos;
 		g_env.last_y = ypos;
-		g_env.start = 0;
+		g_env.initialized = 1;
 	}
 	xoffset = xpos - g_env.last_x;
 	yoffset = g_env.last_y - ypos;

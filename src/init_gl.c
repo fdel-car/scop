@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 17:39:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/29 19:17:07 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/30 18:52:48 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,33 +78,35 @@ const	GLchar	*g_frag_shader_source = "#version 410 core\n"
 "}\n"
 "}\0";
 
-void		init_shaders(void)
+void				log_shaders(GLint shader)
 {
-	GLuint	vertex_shader;
-	GLuint	frag_shader;
-	GLchar	info_log[512];
-	GLint	success;
+	GLint			success;
+	GLchar			info_log[512];
+
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(shader, 512, NULL, info_log);
+		ft_putstr("ERROR::SHADER::VERTEX: Compilation failed\n");
+		ft_putendl(info_log);
+	}
+}
+
+void				init_shaders(void)
+{
+	GLuint			vertex_shader;
+	GLuint			frag_shader;
+	GLint			success;
+	GLchar			info_log[512];
 
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex_shader, 1, &g_vertex_shader_source, NULL);
 	glCompileShader(vertex_shader);
-	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
-		ft_putendl("ERROR::SHADER::VERTEX: Compilation failed\n");
-		ft_putendl(info_log);
-	}
+	log_shaders(vertex_shader);
 	frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(frag_shader, 1, &g_frag_shader_source, NULL);
 	glCompileShader(frag_shader);
-	glGetShaderiv(frag_shader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(frag_shader, 512, NULL, info_log);
-		ft_putendl("ERROR::SHADER::FRAGMENT: Compilation failed\n");
-		ft_putendl(info_log);
-	}
+	log_shaders(frag_shader);
 	g_env.shader_program = glCreateProgram();
 	glAttachShader(g_env.shader_program, vertex_shader);
 	glAttachShader(g_env.shader_program, frag_shader);
@@ -113,9 +115,24 @@ void		init_shaders(void)
 	if (!success)
 	{
 		glGetProgramInfoLog(g_env.shader_program, 512, NULL, info_log);
-		ft_putendl("ERROR::SHADER::PROGRAM: Linking failed\n");
-		ft_putendl(info_log);
+		ft_printf("ERROR::SHADER::PROGRAM: Linking failed\n%s\n", info_log);
 	}
 	glDeleteShader(vertex_shader);
 	glDeleteShader(frag_shader);
+}
+
+void				get_version(GLFWwindow *window)
+{
+	int				width;
+	int				height;
+	const GLubyte	*renderer = glGetString(GL_RENDERER);
+	const GLubyte	*version = glGetString(GL_VERSION);
+
+	ft_printf("Renderer: %s\n", renderer);
+	ft_printf("OpenGL version supported %s\n", version);
+	glfwGetFramebufferSize(window, &width, &height);
+	glViewport(0, 0, width, height);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_MULTISAMPLE);
 }

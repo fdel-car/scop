@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:58:38 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/09 11:33:52 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/11/30 15:00:37 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,6 @@ GLfloat	*matrice_4x4(GLfloat *u, ...)
 	return (matrice);
 }
 
-GLfloat	*scale_4x4(float scale)
-{
-	GLfloat	*u;
-
-	u = matrice_4x4(NULL);
-	u[0] = scale;
-	u[5] = scale;
-	u[10] = scale;
-	return (u);
-}
-
 GLfloat	*perspective_projection(float fov, float aspect, float near, float far)
 {
 	GLfloat	*u;
@@ -79,53 +68,6 @@ GLfloat	*perspective_projection(float fov, float aspect, float near, float far)
 	u[14] = (-2.0f * far * near) / (far - near);
 	u[11] = -1;
 	u[15] = 0;
-	return (u);
-}
-
-GLfloat	*translate4x4(float x, float y, float z)
-{
-	GLfloat	*u;
-
-	u = matrice_4x4(NULL);
-	u[12] = x;
-	u[13] = y;
-	u[14] = z;
-	return (u);
-}
-
-GLfloat	*rotate4x4_z(float theta)
-{
-	GLfloat *u;
-
-	u = matrice_4x4(NULL);
-	u[0] = cos(theta * M_PI / 180);
-	u[4] = -sin(theta * M_PI / 180);
-	u[1] = sin(theta * M_PI / 180);
-	u[5] = cos(theta * M_PI / 180);
-	return (u);
-}
-
-GLfloat	*rotate4x4_y(float theta)
-{
-	GLfloat *u;
-
-	u = matrice_4x4(NULL);
-	u[0] = cos(theta * M_PI / 180);
-	u[2] = -sin(theta * M_PI / 180);
-	u[8] = sin(theta * M_PI / 180);
-	u[10] = cos(theta * M_PI / 180);
-	return (u);
-}
-
-GLfloat	*rotate4x4_x(float theta)
-{
-	GLfloat *u;
-
-	u = matrice_4x4(NULL);
-	u[5] = cos(theta * M_PI / 180);
-	u[9] = -sin(theta * M_PI / 180);
-	u[6] = sin(theta * M_PI / 180);
-	u[10] = cos(theta * M_PI / 180);
 	return (u);
 }
 
