@@ -1,7 +1,7 @@
 # Scop
 
 Rework version of my old Scop, works fine now. It's a obj renderer done in C with Open GL.
-It handles mtl files along with the corresponding .obj.
+It handles .mtl files along with the corresponding .obj.
 
 Don't forget to clone the libft submodule if you want to test it and to install glfw and glew:
 
