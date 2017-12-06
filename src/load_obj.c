@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:59:30 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 18:10:39 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/12/06 18:54:11 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void		print_obj_data(t_obj *obj)
 	if (obj->nb_normals)
 		ft_printf("This .obj has %d normals.\n", obj->nb_normals / 3);
 	else
-		ft_printf("This .obj did not have normals. They are generated on\
+		ft_putstr("This .obj did not have normals. They are generated on\
 		program start.\n");
 	ft_printf("This .obj has %d triangles.\n", obj->data_index / 3);
 }

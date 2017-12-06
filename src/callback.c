@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 19:38:39 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/12/06 16:31:40 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/12/06 18:54:41 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,12 @@ void	key_callback(GLFWwindow *window, int key, int scancode, int action,\
 		if (g_env.textured)
 		{
 			g_env.textured = 0;
-			ft_printf("Texture disabled.\n");
+			ft_putstr("Texture disabled.\n");
 		}
 		else if (!g_env.textured)
 		{
 			g_env.textured = 1;
-			ft_printf("Texture enabled.\n");
+			ft_putstr("Texture enabled.\n");
 		}
 	}
 	(void)scancode;
