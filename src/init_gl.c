@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 17:39:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 18:52:48 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/12/06 16:25:45 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ const	GLchar	*g_frag_shader_source = "#version 410 core\n"
 "vec3 color;\n"
 "} t_light;\n"
 "uniform sampler2D obj_texture[16];\n"
-"uniform bool is_textured;\n"
+"uniform float coeff_texture;\n"
 "void main()\n"
 "{\n"
 "int tex_indice = int(indice);\n"
-"vec4 color_frag = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
+"vec4 color_frag = vec4(0.0f, 0.0f, 0.0f, 1.0f);\n"
 "if (tex_indice >= 0) {\n"
 "color_frag = texture(obj_texture[tex_indice], textures_coords);\n"
 "}\n"
@@ -68,14 +68,12 @@ const	GLchar	*g_frag_shader_source = "#version 410 core\n"
 "}\n"
 "diff = max(diff, 0.0);\n"
 "vec3 diffuse = diff * t_light.color;\n"
-"if (is_textured && tex_indice >= 0)\n"
-"color = vec4(ambient_color + diffuse, 1.0f)\
-* color_frag * vec4(data_colors, 1.0f);\n"
-"else\n"
-"{\n"
-"vec3 result = (ambient_color + diffuse) * data_colors;\n"
+"vec3 result = (ambient_color + diffuse) * (data_colors *\
+(1.0f - coeff_texture)) + (ambient_color + diffuse) * (vec3(color_frag.xyz)\
+* (coeff_texture));\n"
+"if (tex_indice < 0)\n"
+"result = (ambient_color + diffuse) * data_colors;\n"
 "color = vec4(result, 1.0f);\n"
-"}\n"
 "}\0";
 
 void				log_shaders(GLint shader)

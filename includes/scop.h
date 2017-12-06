@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 16:28:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 18:40:36 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/12/06 16:32:11 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ typedef	struct		s_env
 	GLuint			shader_program;
 	GLuint			vbo_obj;
 	GLuint			vao_obj;
+	GLfloat			coeff_texture;
 	GLint			textured;
 	GLuint			projection_loc;
 	GLuint			view_location;
@@ -111,6 +112,7 @@ typedef	struct		s_env
 
 t_env				g_env;
 
+void				change_coeff_texture(void);
 void				set_texture(t_obj *obj);
 t_text				*load_texture(char *path);
 int					generate_texture(char *path);

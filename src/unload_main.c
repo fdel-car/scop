@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:32:03 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 18:36:47 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/12/06 15:50:48 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,6 @@ void		main_loop(GLFWwindow *window, t_obj *obj)
 		use_key();
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUniform1i(glGetUniformLocation(g_env.shader_program, "is_textured"),
-		g_env.textured);
 		g_env.view = look_at4x4(g_env.c_pos, vec_add(g_env.c_pos,
 		g_env.front), g_env.up);
 		g_env.projection = perspective_projection(g_env.fov,

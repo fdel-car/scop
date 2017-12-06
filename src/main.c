@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 18:52:53 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/12/06 16:33:17 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,17 @@ void			init_env(void)
 	g_env.rot_x = 0.0f;
 	g_env.rot_y = 0.0f;
 	g_env.textured = 0;
+	g_env.coeff_texture = 0.0f;
+}
+
+void			change_coeff_texture(void)
+{
+	if (g_env.textured == 1 && g_env.coeff_texture < 1.0f)
+		g_env.coeff_texture += 1.0f * g_env.delta_time;
+	else if (g_env.textured == 0 && g_env.coeff_texture > 0.0f)
+		g_env.coeff_texture -= 1.0f * g_env.delta_time;
+	glUniform1f(glGetUniformLocation(g_env.shader_program, "coeff_texture"),
+	g_env.coeff_texture);
 }
 
 GLFWwindow		*init_window(void)

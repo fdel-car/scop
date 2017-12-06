@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 19:38:39 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 18:40:52 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/12/06 16:31:40 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	use_key(void)
 			g_env.pitch = -89.0f;
 		move_camera();
 	}
+	change_coeff_texture();
 }
 
 void	scroll_callback(GLFWwindow *window, double xpos, double ypos)

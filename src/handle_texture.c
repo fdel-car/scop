@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 17:16:01 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 17:22:26 by fdel-car         ###   ########.fr       */
+/*   Updated: 2017/12/06 16:00:33 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,10 @@ void	handle_texture(char *line, t_obj *obj)
 	if (end_by(path, ".bmp"))
 		obj->sampler2d[obj->tex_indice] = generate_texture(path);
 	if (obj->sampler2d[obj->tex_indice] != -1)
+	{
 		g_env.textured = 1;
+		g_env.coeff_texture = 1.0f;
+	}
 	glActiveTexture(GL_TEXTURE0 + obj->tex_indice);
 	free_tab(tab, 0);
 	free(path);
