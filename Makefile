@@ -6,7 +6,7 @@
 #    By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/01/25 18:47:49 by fdel-car          #+#    #+#              #
-#    Updated: 2017/11/30 18:10:00 by fdel-car         ###   ########.fr        #
+#    Updated: 2018/08/02 13:47:17 by fdel-car         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ $(OBJS): $(SRCS)
 	`pkg-config --cflags glew` -I./libft/includes -I./includes
 
 lib:
-	@make libft
+	@make -C libft
 
 clean:
 	@make clean -C libft
