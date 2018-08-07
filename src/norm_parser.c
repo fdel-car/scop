@@ -6,18 +6,11 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:49:57 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 18:32:48 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/08/07 13:24:06 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
-
-void		free_tab(char **tab, int iter)
-{
-	while (tab[iter])
-		free(tab[iter++]);
-	free(tab);
-}
 
 void		load_data_textures(t_obj *obj, int index)
 {
@@ -67,6 +60,23 @@ void		loop_pre_compute(char *line, t_obj *obj)
 	free(line);
 }
 
+void		check_validity(char *line)
+{
+	int		i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (!ft_isascii(line[i]))
+		{
+			free(line);
+			throw_error(":PARSER: Invalid characters found, \
+most likely not an obj file.");
+		}
+		i++;
+	}
+}
+
 void		pre_compute_data(char *path, t_obj *obj)
 {
 	int		fd;
@@ -76,7 +86,10 @@ void		pre_compute_data(char *path, t_obj *obj)
 		return ;
 	obj_init_data(obj);
 	while (get_next_line(fd, &line))
+	{
+		check_validity(line);
 		loop_pre_compute(line, obj);
+	}
 	free(line);
 	obj->half_width = (obj->min_x + obj->max_x) / 2;
 	obj->half_height = (obj->min_y + obj->max_y) / 2;

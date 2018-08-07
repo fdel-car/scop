@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:32:03 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/12/06 18:53:00 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/08/07 13:26:13 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,8 @@ int			unload_main(GLFWwindow *window, char **av)
 	obj = load_obj(av[1]);
 	if (obj == NULL)
 	{
-		ft_putstr("ERROR: Obj not parsed correctly, try to import and\
-		export it with Blender\n");
+		ft_putstr("ERROR: Obj not parsed correctly, try to import and \
+export it with Blender\n");
 		glfwTerminate();
 		return (-1);
 	}

@@ -6,7 +6,7 @@
 #    By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/01/25 18:47:49 by fdel-car          #+#    #+#              #
-#    Updated: 2018/08/02 13:47:17 by fdel-car         ###   ########.fr        #
+#    Updated: 2018/08/02 18:05:49 by fdel-car         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ CFLAGS = -Wall -Wextra -Werror
 all: lib $(NAME)
 
 $(NAME): $(OBJS)
-	@gcc  -I./includes `pkg-config --libs glfw3` `pkg-config --libs glew` \
+	@gcc -I./includes `pkg-config --libs glfw3` `pkg-config --libs glew` \
 	-o $@ $^ ./libft/libft.a -framework OpenGL
 	@echo "\033[1;31m$(NAME) compiled successfully"
 	@echo "\033[1A\033[0;39m"

@@ -6,15 +6,15 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 16:28:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/12/06 16:32:11 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/08/07 13:35:33 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCOP_H
 # define SCOP_H
 
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 2560
+# define HEIGHT 1440
 # define START_SIZE 8192
 # define DATA_SIZE 12
 # define EPSILON 0.001

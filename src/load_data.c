@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 17:23:49 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 17:47:13 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/08/07 12:38:33 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void		upgrade_array(t_obj *obj)
 {
 	while ((obj->data_index + 1) * DATA_SIZE > obj->size_data)
 	{
-		ft_putendl("Not enough size in data array, reallocing...");
+		ft_putendl("Not enough size in data array, reallocating...");
 		obj->size_data *= 2;
 		obj->data = (GLfloat *)realloc(obj->data, sizeof(GLfloat) *\
 		obj->size_data);

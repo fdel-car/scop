@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:40:15 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 16:48:56 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/08/07 12:38:33 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void		load_vertices(char *line, t_obj *obj)
 	obj->nb_vertices += 3;
 	while (obj->nb_vertices > obj->size_vertices)
 	{
-		ft_putendl("Not enough size in vertices, reallocing...");
+		ft_putendl("Not enough size in vertices, reallocating...");
 		obj->size_vertices *= 2;
 		obj->vertices = (GLfloat *)realloc(obj->vertices, sizeof(GLfloat)\
 		* obj->size_vertices);
@@ -61,7 +61,7 @@ void		load_textures(char *line, t_obj *obj)
 	obj->nb_textures += 2;
 	while (obj->nb_textures > obj->size_textures)
 	{
-		ft_putendl("Not enough size in textures, reallocing...");
+		ft_putendl("Not enough size in textures, reallocating...");
 		obj->size_textures *= 2;
 		obj->textures = (GLfloat *)realloc(obj->textures, sizeof(GLfloat) *\
 		obj->size_textures);
@@ -88,7 +88,7 @@ void		load_normals(char *line, t_obj *obj)
 	obj->nb_normals += 3;
 	while (obj->nb_normals > obj->size_normals)
 	{
-		ft_putendl("Not enough size in normals, reallocing...");
+		ft_putendl("Not enough size in normals, reallocating...");
 		obj->size_normals *= 2;
 		obj->normals = (GLfloat *)realloc(obj->normals, sizeof(GLfloat) *\
 		obj->size_normals);

@@ -6,11 +6,18 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/12/06 18:53:13 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/08/07 13:24:55 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
+
+void			free_tab(char **tab, int iter)
+{
+	while (tab[iter])
+		free(tab[iter++]);
+	free(tab);
+}
 
 void			init_env(void)
 {
