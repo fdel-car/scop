@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:32:03 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/08/07 13:26:13 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/03 16:40:00 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,13 @@ void		init_uniforms(void)
 	g_env.model_location = glGetUniformLocation(g_env.shader_program, "model");
 }
 
-void		free_all(GLFWwindow *window)
+void		free_all(void)
 {
 	free(g_env.projection);
 	free(g_env.rotate_x);
 	free(g_env.rotate_y);
 	free(g_env.model_obj);
 	free(g_env.view);
-	glBindVertexArray(0);
-	glfwSwapBuffers(window);
 }
 
 void		main_loop(GLFWwindow *window, t_obj *obj)
@@ -78,20 +76,22 @@ void		main_loop(GLFWwindow *window, t_obj *obj)
 		use_key();
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		g_env.view = look_at4x4(g_env.c_pos, vec_add(g_env.c_pos,
-		g_env.front), g_env.up);
-		g_env.projection = perspective_projection(g_env.fov,
-		(float)WIDTH / (float)HEIGHT, 0.1f, obj->range);
+		look_at4x4(g_env.c_pos, vec_add(g_env.c_pos,
+		g_env.front), g_env.up, g_env.view);
+		perspective_projection(g_env.fov,
+		1920.0f / 1080.0f, obj->range, g_env.projection);
 		glUniformMatrix4fv(g_env.projection_loc, 1, GL_FALSE, g_env.projection);
 		glBindVertexArray(g_env.vao_obj);
 		glUniformMatrix4fv(g_env.view_location, 1, GL_FALSE, g_env.view);
-		g_env.rotate_x = rotate4x4_x(g_env.rot_x);
-		g_env.rotate_y = rotate4x4_y(g_env.rot_y);
-		g_env.model_obj = mult_matrice4x4(g_env.rotate_x, g_env.rotate_y);
+		rotate4x4_x(g_env.rot_x, g_env.rotate_x);
+		rotate4x4_y(g_env.rot_y, g_env.rotate_y);
+		mult_matrice4x4(g_env.rotate_x, g_env.rotate_y, g_env.model_obj);
 		glUniformMatrix4fv(g_env.model_location, 1, GL_FALSE, g_env.model_obj);
 		glDrawArrays(GL_TRIANGLES, 0, obj->data_index * 3);
-		free_all(window);
+		glBindVertexArray(0);
+		glfwSwapBuffers(window);
 	}
+	free_all();
 }
 
 int			unload_main(GLFWwindow *window, char **av)
@@ -101,8 +101,7 @@ int			unload_main(GLFWwindow *window, char **av)
 	obj = load_obj(av[1]);
 	if (obj == NULL)
 	{
-		ft_putstr("ERROR: Obj not parsed correctly, try to import and \
-export it with Blender\n");
+		ft_putstr("ERROR: :PARSER: Try to import/export .obj with Blender.\n");
 		glfwTerminate();
 		return (-1);
 	}
@@ -111,6 +110,11 @@ export it with Blender\n");
 	init_uniforms();
 	if (g_env.textured)
 		set_texture(obj);
+	g_env.projection = matrice_4x4(NULL);
+	g_env.rotate_x = matrice_4x4(NULL);
+	g_env.rotate_y = matrice_4x4(NULL);
+	g_env.view = matrice_4x4(NULL);
+	g_env.model_obj = matrice_4x4(NULL);
 	main_loop(window, obj);
 	glDeleteVertexArrays(1, &g_env.vao_obj);
 	glDeleteBuffers(1, &g_env.vbo_obj);

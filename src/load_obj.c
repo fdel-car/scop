@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:59:30 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/08/07 12:35:38 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/03 16:43:38 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,18 +63,31 @@ program start.\n");
 
 void		loop_parser(char *line, t_obj *obj, char *path)
 {
+	static float f = 1.0f;
+	static float step = 1.0f;
+
 	if (line[0] == 'v' && line[1] == ' ')
 		load_vertices(line, obj);
-	if (line[0] == 'v' && line[1] == 't')
+	else if (line[0] == 'v' && line[1] == 't')
 		load_textures(line, obj);
-	if (line[0] == 'v' && line[1] == 'n')
+	else if (line[0] == 'v' && line[1] == 'n')
 		load_normals(line, obj);
-	if (line[0] == 'u' && line[1] == 's' && line[2] == 'e' &&
+	else if (line[0] == 'u' && line[1] == 's' && line[2] == 'e' &&
 	line[3] == 'm' && line[4] == 't' && line[5] == 'l' && line[6] == ' ')
 		load_material(line, obj, material_path(path));
-	if (line[0] == 'f' && line[1] == ' ')
+	else if (line[0] == 'f' && line[1] == ' ')
+	{
+		if (!obj->use_mtl)
+		{
+			f += step;
+			if (f + EPSILON >= 4.0f)
+				step *= -1.0f;
+			if (f - EPSILON <= 1.0f)
+				step *= -1.0f;
+			obj->current_color = vec_new(0.2f * f, 0.2f * f, 0.2f * f);
+		}
 		load_data(line, obj);
-	free(line);
+	}
 }
 
 t_obj		*load_obj(char *path)
@@ -94,7 +107,10 @@ t_obj		*load_obj(char *path)
 		return (NULL);
 	}
 	while (get_next_line(fd, &line))
+	{
 		loop_parser(line, obj, path);
+		free(line);
+	}
 	free(line);
 	close(fd);
 	if (obj->nb_normals == 0)

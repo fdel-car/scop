@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:58:38 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 15:00:37 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/03 13:02:46 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ GLfloat	*matrice_4x4(GLfloat *u, ...)
 	return (matrice);
 }
 
-GLfloat	*perspective_projection(float fov, float aspect, float near, float far)
+void	perspective_projection(float fov, float aspect, float far, GLfloat *u)
 {
-	GLfloat	*u;
 	float	tan_fov;
+	float	near;
 
-	u = matrice_4x4(NULL);
+	near = 0.1f;
 	tan_fov = 1 / tan((fov * M_PI / 180.0f) / 2);
 	u[0] = tan_fov / aspect;
 	u[5] = tan_fov;
@@ -68,17 +68,14 @@ GLfloat	*perspective_projection(float fov, float aspect, float near, float far)
 	u[14] = (-2.0f * far * near) / (far - near);
 	u[11] = -1;
 	u[15] = 0;
-	return (u);
 }
 
-GLfloat	*look_at4x4(t_vec3 cam, t_vec3 target, t_vec3 up)
+void	look_at4x4(t_vec3 cam, t_vec3 target, t_vec3 up, GLfloat *u)
 {
-	GLfloat	*u;
 	t_vec3	right;
 	t_vec3	up_final;
 	t_vec3	dir;
 
-	u = matrice_4x4(NULL);
 	dir = vec_norm(vec_sub(target, cam));
 	right = vec_norm(cross_product(dir, up));
 	up_final = cross_product(right, dir);
@@ -94,16 +91,13 @@ GLfloat	*look_at4x4(t_vec3 cam, t_vec3 target, t_vec3 up)
 	u[12] = -vec_dotp(right, cam);
 	u[13] = -vec_dotp(up_final, cam);
 	u[14] = vec_dotp(dir, cam);
-	return (u);
 }
 
-GLfloat	*mult_matrice4x4(GLfloat *u, GLfloat *v)
+void	mult_matrice4x4(GLfloat *u, GLfloat *v, GLfloat *w)
 {
-	GLfloat *w;
 	int		iter;
 	int		tmp;
 
-	w = matrice_4x4(NULL);
 	iter = 0;
 	while (iter < 4)
 	{
@@ -117,5 +111,4 @@ GLfloat	*mult_matrice4x4(GLfloat *u, GLfloat *v)
 		}
 		iter++;
 	}
-	return (w);
 }

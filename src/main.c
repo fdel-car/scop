@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/08/07 13:24:55 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/03 16:58:58 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void			init_env(void)
 	while (iter < 1024)
 		g_env.input[iter++] = 0;
 	g_env.initialized = 0;
-	g_env.last_x = WIDTH / 2;
-	g_env.last_y = HEIGHT / 2;
+	g_env.last_x = 1920 / 2;
+	g_env.last_y = 1080 / 2;
 	g_env.fov = 45.0f;
 	g_env.yaw = -90.0f;
 	g_env.pitch = 0.0f;
@@ -47,8 +47,12 @@ void			change_coeff_texture(void)
 		g_env.coeff_texture += 1.0f * g_env.delta_time;
 	else if (g_env.textured == 0 && g_env.coeff_texture > 0.0f)
 		g_env.coeff_texture -= 1.0f * g_env.delta_time;
+	if (g_env.coeff_texture + EPSILON > 1.0f)
+		g_env.coeff_texture = 1.0f;
+	else if (g_env.coeff_texture - EPSILON < 0.0f)
+		g_env.coeff_texture = 0.0f;
 	glUniform1f(glGetUniformLocation(g_env.shader_program, "coeff_texture"),
-	g_env.coeff_texture);
+	(float)g_env.coeff_texture);
 }
 
 GLFWwindow		*init_window(void)
@@ -61,7 +65,7 @@ GLFWwindow		*init_window(void)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	window = glfwCreateWindow(WIDTH, HEIGHT, "scop_2.0", NULL, NULL);
+	window = glfwCreateWindow(1920, 1080, "scop_2.0", NULL, NULL);
 	if (!window)
 	{
 		ft_putstr("ERROR: Could not open window with GLFW3\n");

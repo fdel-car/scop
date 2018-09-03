@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:49:57 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/08/07 13:24:06 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/03 16:43:54 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void		obj_init_data(t_obj *obj)
 	obj->max_y = INT_MIN;
 	obj->max_z = INT_MIN;
 	obj->range = 0;
+	obj->use_mtl = 0;
 }
 
 void		loop_pre_compute(char *line, t_obj *obj)
@@ -60,7 +61,7 @@ void		loop_pre_compute(char *line, t_obj *obj)
 	free(line);
 }
 
-void		check_validity(char *line)
+void		check_validity(char *line, t_obj *obj)
 {
 	int		i;
 
@@ -75,6 +76,9 @@ most likely not an obj file.");
 		}
 		i++;
 	}
+	if (line[0] == 'm' && line[1] == 't' && line[2] == 'l' &&
+		line[3] == 'l' && line[4] == 'i' && line[5] == 'b' && line[6] == ' ')
+		obj->use_mtl = 1;
 }
 
 void		pre_compute_data(char *path, t_obj *obj)
@@ -87,7 +91,7 @@ void		pre_compute_data(char *path, t_obj *obj)
 	obj_init_data(obj);
 	while (get_next_line(fd, &line))
 	{
-		check_validity(line);
+		check_validity(line, obj);
 		loop_pre_compute(line, obj);
 	}
 	free(line);

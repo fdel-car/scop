@@ -6,15 +6,13 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 16:28:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/08/07 13:35:33 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/03 16:36:00 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCOP_H
 # define SCOP_H
 
-# define WIDTH 2560
-# define HEIGHT 1440
 # define START_SIZE 8192
 # define DATA_SIZE 12
 # define EPSILON 0.001
@@ -74,6 +72,7 @@ typedef	struct		s_obj {
 	t_vec3			current_color;
 	GLint			tex_indice;
 	GLint			last_indice;
+	short			use_mtl;
 	char			item_textured;
 	char			*path;
 }					t_obj;
@@ -133,16 +132,16 @@ t_vec3				cross_product(t_vec3 u, t_vec3 v);
 GLfloat				*identity_4x4(GLfloat *matrice);
 GLfloat				*matrice_4x4(GLfloat *u, ...);
 GLfloat				*scale_4x4(float scale);
-GLfloat				*perspective_projection(float fov, float aspect,\
-					float near, float far);
+void				perspective_projection(float fov, float aspect,\
+					float far, GLfloat *u);
 char				*material_path(char *path);
 void				load_material(char *str, t_obj *obj, char *path);
 GLfloat				*translate4x4(float x, float y, float z);
-GLfloat				*rotate4x4_z(float theta);
-GLfloat				*rotate4x4_y(float theta);
-GLfloat				*rotate4x4_x(float theta);
-GLfloat				*look_at4x4(t_vec3 cam, t_vec3 target, t_vec3 up);
-GLfloat				*mult_matrice4x4(GLfloat *u, GLfloat *v);
+void				rotate4x4_z(float theta, GLfloat *u);
+void				rotate4x4_y(float theta, GLfloat *u);
+void				rotate4x4_x(float theta, GLfloat *u);
+void				look_at4x4(t_vec3 cam, t_vec3 target, t_vec3 up, GLfloat *u);
+void				mult_matrice4x4(GLfloat *u, GLfloat *v, GLfloat *w);
 void				use_key(void);
 void				mouse_callback(GLFWwindow *window, double xpos,\
 					double ypos);

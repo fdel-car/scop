@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 18:08:43 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/11/30 18:08:53 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/03 16:33:10 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	load_material(char *str, t_obj *obj, char *path)
 
 char	*material_path(char *path)
 {
-	int	l;
+	int		l;
 
 	l = ft_strlen(path);
 	path[l - 1] = 'l';
