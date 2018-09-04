@@ -28,12 +28,14 @@ all: lib $(NAME)
 $(NAME): $(OBJS)
 	@gcc -I./includes `pkg-config --libs glfw3` `pkg-config --libs glew` \
 	-o $@ $^ ./libft/libft.a -framework OpenGL
+	# @gcc -I./includes -Wall -o $@ $^ ./libft/libft.a -lGLEW -lGLU -lGL -lglfw -lm
 	@echo "\033[1;31m$(NAME) compiled successfully"
 	@echo "\033[1A\033[0;39m"
 
 $(OBJS): $(SRCS)
 	@clang $(CFLAGS) -c $^ `pkg-config --cflags glfw3` \
 	`pkg-config --cflags glew` -I./libft/includes -I./includes
+	# @clang $(CFLAGS) -c -fPIC $^ `pkg-config --cflags glew` -I./libft/includes -I./includes
 
 lib:
 	@make -C libft

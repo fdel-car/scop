@@ -56,17 +56,29 @@ void		init_uniforms(void)
 	g_env.model_location = glGetUniformLocation(g_env.shader_program, "model");
 }
 
-void		free_all(void)
+void		free_all(GLFWwindow *window, t_obj *obj)
 {
 	free(g_env.projection);
 	free(g_env.rotate_x);
 	free(g_env.rotate_y);
 	free(g_env.model_obj);
 	free(g_env.view);
+	free(obj->vertices);
+	free(obj->normals);
+	free(obj->textures);
+	free(obj->data);
+	free(obj);
+	glfwDestroyWindow(window);
+	glDeleteVertexArrays(1, &g_env.vao_obj);
+	glDeleteBuffers(1, &g_env.vbo_obj);
+	glfwTerminate();
 }
 
 void		main_loop(GLFWwindow *window, t_obj *obj)
 {
+	glfwMakeContextCurrent(window);
+	glBindVertexArray(g_env.vao_obj);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	while (!glfwWindowShouldClose(window))
 	{
 		g_env.frame = glfwGetTime();
@@ -74,24 +86,21 @@ void		main_loop(GLFWwindow *window, t_obj *obj)
 		g_env.last_frame = g_env.frame;
 		glfwPollEvents();
 		use_key();
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		look_at4x4(g_env.c_pos, vec_add(g_env.c_pos,
 		g_env.front), g_env.up, g_env.view);
 		perspective_projection(g_env.fov,
 		1920.0f / 1080.0f, obj->range, g_env.projection);
 		glUniformMatrix4fv(g_env.projection_loc, 1, GL_FALSE, g_env.projection);
-		glBindVertexArray(g_env.vao_obj);
 		glUniformMatrix4fv(g_env.view_location, 1, GL_FALSE, g_env.view);
 		rotate4x4_x(g_env.rot_x, g_env.rotate_x);
 		rotate4x4_y(g_env.rot_y, g_env.rotate_y);
 		mult_matrice4x4(g_env.rotate_x, g_env.rotate_y, g_env.model_obj);
 		glUniformMatrix4fv(g_env.model_location, 1, GL_FALSE, g_env.model_obj);
 		glDrawArrays(GL_TRIANGLES, 0, obj->data_index * 3);
-		glBindVertexArray(0);
 		glfwSwapBuffers(window);
 	}
-	free_all();
+	free_all(window, obj);
 }
 
 int			unload_main(GLFWwindow *window, char **av)
@@ -116,9 +125,5 @@ int			unload_main(GLFWwindow *window, char **av)
 	g_env.view = matrice_4x4(NULL);
 	g_env.model_obj = matrice_4x4(NULL);
 	main_loop(window, obj);
-	glDeleteVertexArrays(1, &g_env.vao_obj);
-	glDeleteBuffers(1, &g_env.vbo_obj);
-	glfwTerminate();
-	free(obj);
 	return (0);
 }

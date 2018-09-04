@@ -49,7 +49,6 @@ typedef	struct		s_obj {
 	GLfloat			*vertices;
 	GLfloat			*textures;
 	GLfloat			*normals;
-	GLfloat			*colors;
 	GLfloat			*data;
 	GLint			nb_vertices;
 	GLint			nb_textures;

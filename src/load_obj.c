@@ -59,6 +59,7 @@ void		print_obj_data(t_obj *obj)
 		ft_putstr("This .obj did not have normals. They are generated on \
 program start.\n");
 	ft_printf("This .obj has %d triangles.\n", obj->data_index / 3);
+	free(obj->path);
 }
 
 void		loop_parser(char *line, t_obj *obj, char *path)
