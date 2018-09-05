@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/03 16:58:58 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/05 11:39:32 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void			init_env(void)
 	g_env.front = vec_new(0, 0, -1);
 	iter = 0;
 	while (iter < 1024)
-		g_env.input[iter++] = 0;
+		g_env.input[iter++] = '\0';
 	g_env.initialized = 0;
 	g_env.last_x = 1920 / 2;
 	g_env.last_y = 1080 / 2;
@@ -52,7 +52,7 @@ void			change_coeff_texture(void)
 	else if (g_env.coeff_texture - EPSILON < 0.0f)
 		g_env.coeff_texture = 0.0f;
 	glUniform1f(glGetUniformLocation(g_env.shader_program, "coeff_texture"),
-	(float)g_env.coeff_texture);
+	g_env.coeff_texture);
 }
 
 GLFWwindow		*init_window(void)
@@ -61,10 +61,9 @@ GLFWwindow		*init_window(void)
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	glfwWindowHint(GLFW_SAMPLES, 4);
 	window = glfwCreateWindow(1920, 1080, "scop_2.0", NULL, NULL);
 	if (!window)
 	{
@@ -93,7 +92,6 @@ int				main(int ac, char **av)
 	window = init_window();
 	if (!window)
 		return (-1);
-	glewExperimental = GL_TRUE;
 	glewInit();
 	get_version(window);
 	init_shaders();

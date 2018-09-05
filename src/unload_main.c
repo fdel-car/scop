@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:32:03 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/03 16:40:00 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/05 11:38:51 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,28 +76,28 @@ void		free_all(GLFWwindow *window, t_obj *obj)
 
 void		main_loop(GLFWwindow *window, t_obj *obj)
 {
-	glfwMakeContextCurrent(window);
-	glBindVertexArray(g_env.vao_obj);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	while (!glfwWindowShouldClose(window))
 	{
 		g_env.frame = glfwGetTime();
 		g_env.delta_time = g_env.frame - g_env.last_frame;
 		g_env.last_frame = g_env.frame;
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(g_env.shader_program);
+		glBindVertexArray(g_env.vao_obj);
+		glDrawArrays(GL_TRIANGLES, 0, obj->data_index * 3);
 		glfwPollEvents();
 		use_key();
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		look_at4x4(g_env.c_pos, vec_add(g_env.c_pos,
 		g_env.front), g_env.up, g_env.view);
-		perspective_projection(g_env.fov,
-		1920.0f / 1080.0f, obj->range, g_env.projection);
-		glUniformMatrix4fv(g_env.projection_loc, 1, GL_FALSE, g_env.projection);
 		glUniformMatrix4fv(g_env.view_location, 1, GL_FALSE, g_env.view);
+		perspective_projection(g_env.fov,
+			1920.0f / 1080.0f, obj->range, g_env.projection);
+		glUniformMatrix4fv(g_env.projection_loc, 1, GL_FALSE, g_env.projection);
 		rotate4x4_x(g_env.rot_x, g_env.rotate_x);
 		rotate4x4_y(g_env.rot_y, g_env.rotate_y);
 		mult_matrice4x4(g_env.rotate_x, g_env.rotate_y, g_env.model_obj);
 		glUniformMatrix4fv(g_env.model_location, 1, GL_FALSE, g_env.model_obj);
-		glDrawArrays(GL_TRIANGLES, 0, obj->data_index * 3);
 		glfwSwapBuffers(window);
 	}
 	free_all(window, obj);
@@ -114,8 +114,8 @@ int			unload_main(GLFWwindow *window, char **av)
 		glfwTerminate();
 		return (-1);
 	}
-	init_buffer_data(obj);
 	glUseProgram(g_env.shader_program);
+	init_buffer_data(obj);
 	init_uniforms();
 	if (g_env.textured)
 		set_texture(obj);
@@ -124,6 +124,7 @@ int			unload_main(GLFWwindow *window, char **av)
 	g_env.rotate_y = matrice_4x4(NULL);
 	g_env.view = matrice_4x4(NULL);
 	g_env.model_obj = matrice_4x4(NULL);
+	glfwMakeContextCurrent(window);
 	main_loop(window, obj);
 	return (0);
 }
