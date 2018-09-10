@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 16:28:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/03 16:36:00 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/10 14:44:09 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # define START_SIZE 8192
 # define DATA_SIZE 12
-# define EPSILON 0.001
+# define EPSILON 0.0001
 # define SQ(x) ((x) * (x))
 
 # include <GL/glew.h>
@@ -139,7 +139,8 @@ GLfloat				*translate4x4(float x, float y, float z);
 void				rotate4x4_z(float theta, GLfloat *u);
 void				rotate4x4_y(float theta, GLfloat *u);
 void				rotate4x4_x(float theta, GLfloat *u);
-void				look_at4x4(t_vec3 cam, t_vec3 target, t_vec3 up, GLfloat *u);
+void				look_at4x4(t_vec3 cam, t_vec3 target, t_vec3 up,\
+					GLfloat *u);
 void				mult_matrice4x4(GLfloat *u, GLfloat *v, GLfloat *w);
 void				use_key(void);
 void				mouse_callback(GLFWwindow *window, double xpos,\

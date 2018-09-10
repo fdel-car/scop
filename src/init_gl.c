@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 17:39:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2017/12/06 18:54:33 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/10 14:28:10 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ const	GLchar	*g_vertex_shader_source = "#version 410 core\n"
 "void main()\n"
 "{\n"
 "gl_Position = projection * view * model * vec4(vertices, 1.0)\
-+ vec4(normals * 0.001, 1.0);\n"
-"data_vertices = vec3(model * vec4(vertices, 1.0f)) + vec3(normals * 0.001);\n"
++ vec4(normals * 0.0001, 1.0);\n"
+"data_vertices = vec3(model * vec4(vertices, 1.0f)) + vec3(normals * 0.0001);\n"
 "textures_coords = textures;\n"
 "data_normals = normals;\n"
 "data_colors = colors;\n"

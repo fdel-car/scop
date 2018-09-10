@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/05 11:39:32 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/10 14:43:06 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ GLFWwindow		*init_window(void)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	window = glfwCreateWindow(1920, 1080, "scop_2.0", NULL, NULL);
 	if (!window)
 	{
