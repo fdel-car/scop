@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:32:03 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/05 11:38:51 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 11:55:48 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int			unload_main(GLFWwindow *window, char **av)
 	obj = load_obj(av[1]);
 	if (obj == NULL)
 	{
-		ft_putstr("ERROR: :PARSER: Try to import/export .obj with Blender.\n");
+		printf("ERROR: :PARSER: Try to import/export .obj with Blender.\n");
 		glfwTerminate();
 		return (-1);
 	}

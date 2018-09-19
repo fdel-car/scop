@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:59:30 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/03 16:43:38 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 12:35:36 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ void		init_obj(char *path, t_obj *obj, int iter)
 	obj->nb_normals = 0;
 	obj->data_index = 0;
 	obj->current_color = vec_new(0.64f, 0.64f, 0.64f);
-	l = ft_strlen(path);
+	l = strlen(path);
 	while ((l - 1) >= 0 && path[l - 1] != '/')
 		l--;
-	obj->path = ft_strndup(path, l);
+	obj->path = strndup(path, l);
 	while (iter < 16)
 		obj->sampler2d[iter++] = -1;
 	obj->tex_indice = -1;
@@ -51,14 +51,14 @@ void		init_obj(char *path, t_obj *obj, int iter)
 
 void		print_obj_data(t_obj *obj)
 {
-	ft_printf("This .obj has %d vertices.\n", obj->nb_vertices / 3);
-	ft_printf("This .obj has %d textures coordinates.\n", obj->nb_textures / 2);
+	printf("This .obj has %d vertices.\n", obj->nb_vertices / 3);
+	printf("This .obj has %d textures coordinates.\n", obj->nb_textures / 2);
 	if (obj->nb_normals)
-		ft_printf("This .obj has %d normals.\n", obj->nb_normals / 3);
+		printf("This .obj has %d normals.\n", obj->nb_normals / 3);
 	else
-		ft_putstr("This .obj did not have normals. They are generated on \
+		printf("This .obj did not have normals. They are generated on \
 program start.\n");
-	ft_printf("This .obj has %d triangles.\n", obj->data_index / 3);
+	printf("This .obj has %d triangles.\n", obj->data_index / 3);
 	free(obj->path);
 }
 

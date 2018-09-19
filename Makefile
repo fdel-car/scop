@@ -6,36 +6,30 @@
 #    By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/01/25 18:47:49 by fdel-car          #+#    #+#              #
-#    Updated: 2018/08/02 18:05:49 by fdel-car         ###   ########.fr        #
+#    Updated: 2018/09/19 12:50:33 by fdel-car         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = scop
+NAME = Scop
 
-SRCS = src/main.c src/load_obj.c src/init_gl.c src/matrice.c src/vector.c\
-src/callback.c src/load_texture.c src/matrice_tools.c src/vector_op.c\
-src/norm_vector.c src/unload_main.c src/unload_parser.c src/norm_parser.c\
-src/handle_texture.c src/load_data.c src/load_material.c
+SRCS = $(shell find ./src -name *.c)
 
-OBJS = main.o load_obj.o init_gl.o matrice.o vector.o callback.o load_texture.o\
-matrice_tools.o vector_op.o norm_vector.o unload_main.o unload_parser.o\
-norm_parser.o handle_texture.o load_data.o load_material.o
+OBJS = $(SRCS:.c=.o)
 
 CFLAGS = -Wall -Wextra -Werror
 
 all: lib $(NAME)
 
 $(NAME): $(OBJS)
-	@gcc -I./includes `pkg-config --libs glfw3` `pkg-config --libs glew` \
-	-o $@ $^ ./libft/libft.a -framework OpenGL
-	# @gcc -I./includes -Wall -o $@ $^ ./libft/libft.a -lGLEW -lGLU -lGL -lglfw -lm
+	@gcc -I./includes `pkg-config --libs glfw3` `pkg-config --libs glew` -o $@ $^ ./libft/libft.a -framework OpenGL
+	@# @gcc -I./includes -o $@ $^ ./libft/libft.a -lGLEW -lGLU -lGL -lglfw -lm
 	@echo "\033[1;31m$(NAME) compiled successfully"
 	@echo "\033[1A\033[0;39m"
 
 $(OBJS): $(SRCS)
-	@clang $(CFLAGS) -c $^ `pkg-config --cflags glfw3` \
-	`pkg-config --cflags glew` -I./libft/includes -I./includes
-	# @clang $(CFLAGS) -c -fPIC $^ `pkg-config --cflags glew` -I./libft/includes -I./includes
+	@clang $(CFLAGS) -c $^ `pkg-config --cflags glfw3` `pkg-config --cflags glew` -I./libft/includes -I./includes
+	@# @clang $(CFLAGS) -c -fPIC $^ `pkg-config --cflags glew` -I./libft/includes -I./includes
+	@mv *.o src
 
 lib:
 	@make -C libft
@@ -48,6 +42,6 @@ fclean: clean
 	@rm -rf $(NAME)
 
 re: fclean
-	make all
+	@make all
 
 .PHONY: all clean fclean re lib

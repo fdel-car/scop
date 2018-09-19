@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:49:57 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/03 16:43:54 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 12:46:03 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,17 @@ void		loop_pre_compute(char *line, t_obj *obj)
 	if (line[0] == 'v' & line[1] == ' ')
 	{
 		tab = ft_strsplit(line, ' ');
-		tmp = ft_atof(tab[1]);
+		tmp = atof(tab[1]);
 		if (tmp < obj->min_x)
 			obj->min_x = tmp;
 		if (tmp > obj->max_x)
 			obj->max_x = tmp;
-		tmp = ft_atof(tab[2]);
+		tmp = atof(tab[2]);
 		if (tmp < obj->min_y)
 			obj->min_y = tmp;
 		if (tmp > obj->max_y)
 			obj->max_y = tmp;
-		tmp = ft_atof(tab[3]);
+		tmp = atof(tab[3]);
 		if (tmp < obj->min_z)
 			obj->min_z = tmp;
 		if (tmp > obj->max_z)

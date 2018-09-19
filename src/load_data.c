@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 17:23:49 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/03 16:44:54 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 12:47:55 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ void		fill_data(char *str, t_obj *obj)
 	tmp = 0;
 	each = ft_strsplit(str, '/');
 	if (each[tmp] && obj->nb_vertices)
-		load_data_vertices(obj, ft_atoi(each[tmp++]) - 1);
+		load_data_vertices(obj, atoi(each[tmp++]) - 1);
 	if (each[tmp] && obj->nb_textures)
-		load_data_textures(obj, ft_atoi(each[tmp++]) - 1);
+		load_data_textures(obj, atoi(each[tmp++]) - 1);
 	if (each[tmp] && obj->nb_normals)
-		load_data_normals(obj, ft_atoi(each[tmp++]) - 1);
+		load_data_normals(obj, atoi(each[tmp++]) - 1);
 	obj->data[obj->data_index * DATA_SIZE + 8] = obj->current_color.x;
 	obj->data[obj->data_index * DATA_SIZE + 9] = obj->current_color.y;
 	obj->data[obj->data_index * DATA_SIZE + 10] = obj->current_color.z;
@@ -41,7 +41,7 @@ void		upgrade_array(t_obj *obj)
 {
 	while ((obj->data_index + 1) * DATA_SIZE > obj->size_data)
 	{
-		ft_putendl("Not enough size in data array, reallocating...");
+		printf("Not enough size in data array, reallocating...\n");
 		obj->size_data *= 2;
 		obj->data = (GLfloat *)realloc(obj->data, sizeof(GLfloat) *\
 		obj->size_data);

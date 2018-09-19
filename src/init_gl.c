@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 17:39:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/10 14:28:10 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 12:47:19 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ void				log_shaders(GLint shader)
 	if (!success)
 	{
 		glGetShaderInfoLog(shader, 512, NULL, info_log);
-		ft_putstr("ERROR::SHADER::VERTEX: Compilation failed\n");
-		ft_putendl(info_log);
+		printf("ERROR::SHADER::VERTEX: Compilation failed\n");
+		printf("%s\n", info_log);
 	}
 }
 
@@ -113,7 +113,7 @@ void				init_shaders(void)
 	if (!success)
 	{
 		glGetProgramInfoLog(g_env.shader_program, 512, NULL, info_log);
-		ft_printf("ERROR::SHADER::PROGRAM: Linking failed\n%s\n", info_log);
+		printf("ERROR::SHADER::PROGRAM: Linking failed\n%s\n", info_log);
 	}
 	glDeleteShader(vertex_shader);
 	glDeleteShader(frag_shader);
@@ -126,8 +126,8 @@ void				get_version(GLFWwindow *window)
 	const GLubyte	*renderer = glGetString(GL_RENDERER);
 	const GLubyte	*version = glGetString(GL_VERSION);
 
-	ft_printf("Renderer: %s\n", renderer);
-	ft_printf("OpenGL version supported %s\n", version);
+	printf("Renderer: %s\n", renderer);
+	printf("OpenGL version supported %s\n", version);
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
 	glEnable(GL_DEPTH_TEST);

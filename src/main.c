@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/10 14:43:06 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 11:55:48 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ GLFWwindow		*init_window(void)
 	window = glfwCreateWindow(1920, 1080, "scop_2.0", NULL, NULL);
 	if (!window)
 	{
-		ft_putstr("ERROR: Could not open window with GLFW3\n");
+		printf("ERROR: Could not open window with GLFW3\n");
 		glfwTerminate();
 		return (NULL);
 	}
@@ -87,7 +87,7 @@ int				main(int ac, char **av)
 	init_env();
 	if (!glfwInit())
 	{
-		ft_putstr("ERROR: Could not start GLFW3\n");
+		printf("ERROR: Could not start GLFW3\n");
 		return (-1);
 	}
 	window = init_window();
@@ -98,7 +98,7 @@ int				main(int ac, char **av)
 	init_shaders();
 	if (ac != 2)
 	{
-		ft_putstr("ERROR: Obj missing in command line\n");
+		printf("ERROR: Obj missing in command line\n");
 		glfwTerminate();
 		return (-1);
 	}

@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 18:08:43 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/03 16:33:10 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 12:47:43 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int		line_check(char *line, t_obj *obj)
 	if (line[0] == 'K' && line[1] == 'd' && line[2] == ' ')
 	{
 		each = ft_strsplit(line, ' ');
-		obj->current_color.x = ft_atof(each[1]);
-		obj->current_color.y = ft_atof(each[2]);
-		obj->current_color.z = ft_atof(each[3]);
+		obj->current_color.x = atof(each[1]);
+		obj->current_color.y = atof(each[2]);
+		obj->current_color.z = atof(each[3]);
 		free_tab(each, 0);
 	}
 	else if (line[0] == 'm' && line[1] == 'a' && line[2] == 'p' && line[3]
@@ -45,7 +45,7 @@ int		load_material_data(char *use, char *new, int fd, t_obj *obj)
 	char	*line;
 
 	tmp = ft_strsplit(new, ' ');
-	if (ft_strcmp(tmp[1], use) == 0)
+	if (strcmp(tmp[1], use) == 0)
 	{
 		while (get_next_line(fd, &line))
 		{
@@ -87,7 +87,7 @@ char	*material_path(char *path)
 {
 	int		l;
 
-	l = ft_strlen(path);
+	l = strlen(path);
 	path[l - 1] = 'l';
 	path[l - 2] = 't';
 	path[l - 3] = 'm';
