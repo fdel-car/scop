@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 15:35:36 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/19 11:55:48 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 14:58:43 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ GLFWwindow		*init_window(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	window = glfwCreateWindow(1920, 1080, "scop_2.0", NULL, NULL);
+	window = glfwCreateWindow(1920, 1080, "Scop", NULL, NULL);
 	if (!window)
 	{
 		printf("ERROR: Could not open window with GLFW3\n");

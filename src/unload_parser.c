@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:40:15 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/19 12:45:24 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 14:57:25 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void		load_textures(char *line, t_obj *obj)
 	obj->nb_textures += 2;
 	while (obj->nb_textures > obj->size_textures)
 	{
-		printf("Not enough size in textures, reallocating...");
+		printf("Not enough size in textures, reallocating...\n");
 		obj->size_textures *= 2;
 		obj->textures = (GLfloat *)realloc(obj->textures, sizeof(GLfloat) *
 															  obj->size_textures);
@@ -87,7 +87,7 @@ void		load_normals(char *line, t_obj *obj)
 	obj->nb_normals += 3;
 	while (obj->nb_normals > obj->size_normals)
 	{
-		printf("Not enough size in normals, reallocating...");
+		printf("Not enough size in normals, reallocating...\n");
 		obj->size_normals *= 2;
 		obj->normals = (GLfloat *)realloc(obj->normals, sizeof(GLfloat) *
 															obj->size_normals);

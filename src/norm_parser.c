@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:49:57 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/19 12:46:03 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 14:55:49 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void		check_validity(char *line, t_obj *obj)
 	i = 0;
 	while (line[i])
 	{
-		if (!ft_isascii(line[i]))
+		if (!isascii(line[i]))
 		{
 			free(line);
 			throw_error(":PARSER: Invalid characters found, \

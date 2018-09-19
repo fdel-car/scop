@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdel-car <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/24 19:52:10 by fdel-car          #+#    #+#             */
-/*   Updated: 2015/12/16 21:41:35 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 14:39:34 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,6 @@ static int	ft_length(int n)
 	return (length);
 }
 
-static int	ft_sign(int n)
-{
-	if (n < 0)
-		return (1);
-	return (0);
-}
-
 char		*ft_itoa(int n)
 {
 	int		l;
@@ -42,9 +35,9 @@ char		*ft_itoa(int n)
 	char	*str;
 
 	l = ft_length(n);
-	sign = ft_sign(n);
+	sign = n < 0 ? 1 : 0;
 	if (n == -2147483648)
-		return (ft_strdup("-2147483648"));
+		return (strdup("-2147483648"));
 	if (sign == 1)
 		n = -n;
 	str = (char *)malloc(sizeof(char) * (l + sign + 1));

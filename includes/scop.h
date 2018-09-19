@@ -6,7 +6,7 @@
 /*   By: fdel-car <fdel-car@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 16:28:24 by fdel-car          #+#    #+#             */
-/*   Updated: 2018/09/19 11:45:11 by fdel-car         ###   ########.fr       */
+/*   Updated: 2018/09/19 14:56:19 by fdel-car         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <string.h>
+#include <ctype.h>
 #include "libft.h"
 
 typedef struct s_vec3
