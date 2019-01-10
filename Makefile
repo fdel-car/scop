@@ -30,7 +30,7 @@ $(TARGET): $(OBJS)
 	@echo "\n$(GREEN)The target $(TARGET) was compiled successfully!$(RESET)"
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
-	@echo "$(CLEAR_LINE)Creating object of the scop with $^...$(MOVE_CURSOR_UP)"
+	@echo "$(CLEAR_LINE)Creating object of the $(TARGET) with $^...$(MOVE_CURSOR_UP)"
 	@# @$(CC) $(CFLAGS) -c $^ `pkg-config --cflags glfw3` `pkg-config --cflags glew` -o $@ -I./libft/includes -I./includes # MacOS
 	@$(CC) $(CFLAGS) -c -fPIC $^ `pkg-config --cflags glew` -o $@ -I./libft/includes -I./includes # Linux
 
