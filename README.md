@@ -9,6 +9,7 @@ Don't forget to install glfw and glew:
 brew install glfw3
 brew install glew
 ```
+
 ### 42 logo
 ![alt tag](/screenshots/42_logo.png)
 ### Geralt de Riv
