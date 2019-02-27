@@ -12,9 +12,12 @@ brew install glew
 
 ### 42 logo
 ![alt tag](/screenshots/42_logo.png)
+
 ### Geralt de Riv
 ![alt tag](/screenshots/geralt_de_riv.png)
+
 ### Alduin
 ![alt tag](/screenshots/alduin.png)
+
 ### Super Boo
 ![alt tag](/screenshots/super_boo.png)
